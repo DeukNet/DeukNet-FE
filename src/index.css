@@ -1,0 +1,163 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background: #2b2b2b;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  background: #2b2b2b;
+  color: #ffffff;
+  transition: background-color 0.3s, color 0.3s;
+  padding-top: 90px;
+}
+
+/* 다크모드 스타일 - 전체 통일 테마 */
+html.dark body {
+  background: #2b2b2b;
+  color: #ffffff;
+}
+
+/* 네비게이션 바 제외하고 다크모드 적용 */
+html.dark *:not(nav):not(nav *) {
+  color: #ffffff !important;
+  border-color: #555 !important;
+}
+
+html.dark .container {
+  background: #2b2b2b;
+}
+
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+html.dark a {
+  color: #66b3ff !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #f0f0f0;
+  font-weight: bold;
+}
+
+html.dark th {
+  background: #3a3a3a !important;
+}
+
+tr:hover {
+  background: #f9f9f9;
+}
+
+html.dark tr:hover {
+  background: #3a3a3a !important;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 6px 12px;
+}
+
+button:hover {
+  background: #f0f0f0;
+}
+
+html.dark button {
+  background: #3a3a3a !important;
+  border-color: #555 !important;
+}
+
+html.dark button:hover {
+  background: #4a4a4a !important;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.box {
+  background: white;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+html.dark .box {
+  background: #3a3a3a !important;
+}
+
+.box-header {
+  background: #e8e8e8;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+}
+
+html.dark .box-header {
+  background: #4a4a4a !important;
+}
+
+.box-content {
+  padding: 15px;
+}
+
+.error {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  padding: 10px;
+  margin-bottom: 15px;
+  color: #856404;
+}
+
+html.dark .error {
+  background: #4a3f1f !important;
+  border: 1px solid #ffcc00 !important;
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+}
+
+/* 반응형 - 네비게이션 바 높이 조정 */
+@media (max-width: 768px) {
+  body {
+    padding-top: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding-top: 140px;
+  }
+}

@@ -1,0 +1,78 @@
+/* Footer 스타일 - 다크 테마 */
+.footer {
+  background: #2a2a2a;
+  border-top: 1px solid #555;
+  margin-top: 40px;
+  padding: 20px 0;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.footer-info {
+  margin-bottom: 15px;
+}
+
+.footer-credits {
+  font-size: 13px;
+  color: #cccccc;
+  margin-bottom: 8px;
+}
+
+.footer-credits strong {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.footer-links {
+  font-size: 12px;
+  margin: 0;
+}
+
+.footer-link {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.footer-link:hover {
+  color: #3399ff;
+  text-decoration: underline;
+}
+
+.footer-separator {
+  color: #999;
+  margin: 0 8px;
+}
+
+.footer-copyright {
+  font-size: 11px;
+  color: #999;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid #555;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .footer {
+    padding: 15px 0;
+    margin-top: 30px;
+  }
+
+  .footer-credits {
+    font-size: 12px;
+  }
+
+  .footer-links {
+    font-size: 11px;
+  }
+
+  .footer-copyright {
+    font-size: 10px;
+  }
+}

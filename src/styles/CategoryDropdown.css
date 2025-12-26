@@ -1,0 +1,145 @@
+/* CategoryDropdown 스타일 - 2000년대 레트로 디자인 */
+.category-dropdown {
+  position: relative;
+}
+
+.category-dropdown-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: #2a2a2a;
+  border: 1px solid #555;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.category-dropdown-button:hover {
+  background: #3a3a3a;
+}
+
+.dropdown-arrow {
+  font-size: 8px;
+}
+
+.category-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  min-width: 250px;
+  max-width: 500px;
+  max-height: 400px;
+  background: #3a3a3a;
+  border: 1px solid #555;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.category-dropdown-header {
+  padding: 8px 10px;
+  background: #3a3a3a;
+  border-bottom: 1px solid #555;
+}
+
+.view-all-categories-button {
+  width: 100%;
+  padding: 6px 10px;
+  background: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #555;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.view-all-categories-button:hover {
+  background: #3a3a3a;
+}
+
+.category-dropdown-content {
+  max-height: 350px;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.category-dropdown-empty {
+  padding: 30px 15px;
+  text-align: center;
+  color: #999;
+  font-size: 11px;
+}
+
+.category-group {
+  margin-bottom: 0;
+}
+
+.category-parent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  cursor: pointer;
+  background: #2a2a2a;
+  border-bottom: 1px solid #555;
+  border-left: 2px solid transparent;
+}
+
+.category-parent-item:hover {
+  background: #3a3a3a;
+  border-left-color: #ffffff;
+}
+
+.category-name {
+  flex: 1;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.category-thumbnail-small {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border: 1px solid #555;
+}
+
+.category-children {
+  background: #2a2a2a;
+  padding-left: 0;
+}
+
+.category-child-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px 6px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #555;
+  border-left: 2px solid transparent;
+}
+
+.category-child-item:hover {
+  background: #3a3a3a;
+  border-left-color: #999;
+}
+
+.category-child-item .category-name {
+  font-size: 11px;
+  font-weight: normal;
+  color: #cccccc;
+}
+
+.category-child-item:hover .category-name {
+  color: #ffffff;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .category-dropdown-menu {
+    left: auto;
+    right: 0;
+    min-width: 220px;
+  }
+}

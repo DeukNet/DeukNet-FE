@@ -1,0 +1,291 @@
+/* MainPage 스타일 - 2000년대 레트로 디자인 */
+.main-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.main-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #3a3a3a;
+  border: 1px solid #555;
+}
+
+.main-header h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.main-header p {
+  font-size: 12px;
+  color: #999;
+}
+
+.main-content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 10px 20px;
+}
+
+.category-ranking-section,
+.trending-section,
+.all-posts-section {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border-bottom: 2px solid #555;
+  background: #3a3a3a;
+}
+
+/* 인기 카테고리 */
+.category-ranking-container {
+  border: 1px solid #555;
+  background: #2a2a2a;
+}
+
+.ranking-item {
+  padding: 8px 10px;
+  background: #2a2a2a;
+  border-bottom: 1px solid #555;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.ranking-item.top-three {
+  background: #2a2a2a;
+}
+
+.ranking-item:hover {
+  background: #3a3a3a;
+}
+
+.ranking-number {
+  font-size: 12px;
+  font-weight: bold;
+  color: #999;
+  min-width: 20px;
+  text-align: center;
+}
+
+.ranking-item.top-three .ranking-number {
+  color: #ffffff;
+}
+
+.ranking-name {
+  flex: 1;
+  font-size: 12px;
+  color: #cccccc;
+  font-weight: bold;
+}
+
+.ranking-item.top-three .ranking-name {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.ranking-stats {
+  font-size: 10px;
+  color: #999;
+  white-space: nowrap;
+  display: flex;
+  gap: 8px;
+}
+
+.loading-message,
+.empty-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 12px;
+}
+
+.empty-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.browse-button {
+  padding: 8px 15px;
+  background: #3a3a3a;
+  color: #ffffff;
+  border: 1px solid #555;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.browse-button:hover {
+  background: #4a4a4a;
+}
+
+/* 실시간 인기 게시물 */
+.trending-posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #555;
+}
+
+.show-more-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-top: none;
+}
+
+.show-more-button {
+  padding: 6px 20px;
+  background: #3a3a3a;
+  color: #ffffff;
+  border: 1px solid #555;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.show-more-button:hover {
+  background: #4a4a4a;
+}
+
+/* 전체 게시물 섹션 */
+.all-posts-section .view-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 10px;
+  align-items: center;
+  border: 1px solid #555;
+}
+
+.all-posts-section .tab-button {
+  padding: 8px 15px;
+  background: #2a2a2a;
+  color: #cccccc;
+  border: none;
+  border-right: 1px solid #555;
+  cursor: pointer;
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.all-posts-section .tab-button.active {
+  background: #3a3a3a;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.all-posts-section .tab-button.featured.active {
+  background: #3a3a3a;
+}
+
+.all-posts-section .posts-box {
+  background: #3a3a3a;
+  border: 1px solid #555;
+}
+
+.all-posts-section .posts-box-header {
+  background: #3a3a3a;
+  color: #ffffff;
+  padding: 8px 10px;
+  font-weight: bold;
+  font-size: 12px;
+  border-bottom: 1px solid #555;
+}
+
+.all-posts-section .posts-box-content {
+  padding: 0;
+  background: #2a2a2a;
+}
+
+.all-posts-section .posts-empty {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 12px;
+}
+
+.all-posts-section .posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* 페이지네이션 */
+.all-posts-section .pagination {
+  text-align: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  align-items: center;
+  border: 1px solid #555;
+}
+
+.all-posts-section .pagination-button {
+  padding: 6px 10px;
+  cursor: pointer;
+  background: #2a2a2a;
+  border: none;
+  border-right: 1px solid #555;
+  color: #cccccc;
+  font-size: 12px;
+}
+
+.all-posts-section .pagination-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.all-posts-section .pagination-button.active {
+  background: #3a3a3a;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.all-posts-section .pagination-info {
+  margin-left: 10px;
+  color: #999;
+  font-size: 11px;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .main-header h1 {
+    font-size: 20px;
+  }
+
+  .section-title {
+    font-size: 13px;
+  }
+
+  .view-all-button {
+    padding: 8px 20px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-header h1 {
+    font-size: 18px;
+  }
+
+  .section-title {
+    font-size: 12px;
+  }
+}

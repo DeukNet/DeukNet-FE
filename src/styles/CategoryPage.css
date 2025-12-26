@@ -1,0 +1,378 @@
+/* CategoryPage 스타일 - 2000년대 레트로 디자인 */
+.category-page {
+  min-height: 100vh;
+}
+
+/* 카테고리 헤더 배너 */
+.category-header-banner {
+  width: 100%;
+  height: 150px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid #555;
+}
+
+.category-header-overlay {
+  width: 100%;
+  height: 100%;
+  background: #252525;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-header-content {
+  text-align: center;
+  color: #ffffff;
+  padding: 15px;
+  max-width: 800px;
+}
+
+.category-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.category-description {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #cccccc;
+}
+
+/* 하위 카테고리 섹션 */
+.child-categories-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  border-bottom: 2px solid #555;
+  background: #252525;
+}
+
+.child-categories-list {
+  border: 1px solid #555;
+  background: #1a1a1a;
+}
+
+.child-category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-bottom: 1px solid #555;
+  cursor: pointer;
+  font-size: 13px;
+  background: #1a1a1a;
+}
+
+.child-category-item:last-child {
+  border-bottom: none;
+}
+
+.child-category-item:hover {
+  background: #353535;
+}
+
+.child-category-name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  color: #cccccc;
+}
+
+.child-category-indent {
+  color: #999;
+  margin-right: 8px;
+  font-family: monospace;
+}
+
+.child-category-description {
+  color: #999;
+  font-size: 11px;
+  margin-left: 15px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 게시물 섹션 */
+.posts-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 10px 20px;
+}
+
+/* 카테고리 검색바 */
+.category-search-container {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.category-search-form {
+  display: flex;
+  gap: 0;
+  border: 1px solid #555;
+  background: #1a1a1a;
+  max-width: 500px;
+  width: 100%;
+}
+
+.category-search-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #1a1a1a;
+  border: none;
+  border-right: 1px solid #555;
+  color: #ffffff;
+  font-size: 12px;
+  outline: none;
+}
+
+.category-search-input::placeholder {
+  color: #999;
+}
+
+.category-search-button,
+.category-search-clear {
+  padding: 8px 15px;
+  background: #1a1a1a;
+  color: #cccccc;
+  border: none;
+  border-right: 1px solid #555;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.category-search-button:hover,
+.category-search-clear:hover {
+  background: #252525;
+  color: #ffffff;
+}
+
+.category-search-clear {
+  border-right: none;
+  color: #ff6666;
+}
+
+.posts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.view-tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid #555;
+}
+
+.tab-button {
+  padding: 8px 15px;
+  background: #1a1a1a;
+  color: #cccccc;
+  border: none;
+  border-right: 1px solid #555;
+  cursor: pointer;
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.tab-button:hover {
+  background: #252525;
+}
+
+.tab-button.active {
+  background: #252525;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.tab-button.featured.active {
+  background: #252525;
+}
+
+.write-button {
+  padding: 8px 15px;
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #555;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.write-button:hover {
+  background: #252525;
+}
+
+.loading,
+.posts-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 12px;
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #555;
+}
+
+/* 페이지네이션 */
+.pagination {
+  text-align: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid #555;
+}
+
+.pagination-button {
+  padding: 6px 10px;
+  cursor: pointer;
+  background: #1a1a1a;
+  border: none;
+  border-right: 1px solid #555;
+  color: #cccccc;
+  font-size: 12px;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: #252525;
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination-button.active {
+  background: #252525;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.pagination-info {
+  margin-left: 10px;
+  color: #999;
+  font-size: 11px;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .category-header-banner {
+    height: 120px;
+  }
+
+  .category-title {
+    font-size: 20px;
+  }
+
+  .category-description {
+    font-size: 11px;
+  }
+
+  .child-categories-section {
+    padding: 15px 10px;
+  }
+
+  .section-title {
+    font-size: 13px;
+  }
+
+  .child-category-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .child-category-description {
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .posts-section {
+    padding: 15px 10px 15px;
+  }
+
+  .category-search-container {
+    justify-content: stretch;
+  }
+
+  .category-search-form {
+    max-width: 100%;
+  }
+
+  .category-search-button,
+  .category-search-clear {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .posts-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .view-tabs {
+    width: 100%;
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .write-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-header-banner {
+    height: 100px;
+  }
+
+  .category-title {
+    font-size: 18px;
+  }
+
+  .category-description {
+    font-size: 10px;
+  }
+
+  .child-category-item {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .pagination-button {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .pagination-info {
+    margin-left: 8px;
+    font-size: 10px;
+  }
+}

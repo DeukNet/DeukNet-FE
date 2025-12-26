@@ -1,0 +1,177 @@
+/* Navbar 스타일 - 2000년대 레트로 디자인 */
+.navbar {
+  background: #3a3a3a;
+  border-bottom: 1px solid #555;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+}
+
+.navbar-visible {
+  transform: translateY(0);
+}
+
+.navbar-hidden {
+  transform: translateY(-100%);
+}
+
+.navbar-container {
+  width: 100%;
+}
+
+.navbar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 15px;
+  background: #3a3a3a;
+  max-width: 100%;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-logo-link:hover {
+  opacity: 1;
+}
+
+.navbar-logo-image {
+  height: 32px;
+  width: 32px;
+}
+
+.navbar-logo-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.navbar-link {
+  color: #cccccc;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.navbar-link:hover {
+  color: #ffffff;
+}
+
+.navbar-search-container {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 20px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-user-link {
+  color: #cccccc;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.navbar-user-link:hover {
+  color: #ffffff;
+}
+
+.navbar-logout-button {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: normal;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #555;
+  cursor: pointer;
+}
+
+.navbar-logout-button:hover {
+  background-color: #3a3a3a;
+}
+
+.navbar-login-button {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: normal;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #555;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.navbar-login-button:hover {
+  background-color: #3a3a3a;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .navbar-header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 10px;
+  }
+
+  .navbar-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-search-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .navbar-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .navbar-logo-text {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-logo-image {
+    height: 28px;
+    width: 28px;
+  }
+
+  .navbar-logo-text {
+    font-size: 14px;
+  }
+
+  .navbar-logout-button,
+  .navbar-login-button {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}

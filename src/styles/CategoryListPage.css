@@ -1,0 +1,118 @@
+/* CategoryListPage 스타일 - 2000년대 레트로 디자인 (트리 구조) */
+.category-list-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.category-list-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #3a3a3a;
+  border: 1px solid #555;
+}
+
+.category-list-header h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.category-list-header p {
+  font-size: 12px;
+  color: #999;
+}
+
+.category-list-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading-message,
+.empty-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 12px;
+}
+
+/* 카테고리 트리 컨테이너 */
+.category-tree-container {
+  border: 1px solid #555;
+  background: #2a2a2a;
+}
+
+/* 카테고리 트리 아이템 */
+.category-tree-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-bottom: 1px solid #555;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.category-tree-item:hover {
+  background: #4a4a4a !important;
+}
+
+.category-tree-name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.category-tree-indent {
+  color: #999;
+  margin-right: 8px;
+  font-family: monospace;
+}
+
+.category-tree-count {
+  margin-left: 8px;
+  color: #999;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.category-tree-description {
+  color: #999;
+  font-size: 11px;
+  margin-left: 15px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .category-list-header h1 {
+    font-size: 20px;
+  }
+
+  .category-tree-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .category-tree-description {
+    margin-left: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-list-header h1 {
+    font-size: 18px;
+  }
+
+  .category-tree-item {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+}

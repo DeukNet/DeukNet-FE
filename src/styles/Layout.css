@@ -1,0 +1,5 @@
+/* Layout 스타일 */
+.layout-container {
+  min-height: 100vh;
+  background: transparent;
+}
