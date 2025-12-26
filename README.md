@@ -9,7 +9,6 @@ DeukNet API를 위한 React + TypeScript 프론트엔드 애플리케이션입�
 - **Vite** - 빌드 도구
 - **React Router** - 라우팅
 - **Axios** - HTTP 클라이언트
-- **Tailwind CSS** - 스타일링
 - **TanStack Query** - 서버 상태 관리 (설치됨, 추후 적용 가능)
 
 ## 시작하기
