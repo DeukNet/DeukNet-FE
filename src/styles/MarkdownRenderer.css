@@ -33,7 +33,7 @@
   color: #dc2626;
   padding: 2px 4px;
   border-radius: 3px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 html.dark .markdown-content code.inline-code {
@@ -76,28 +76,28 @@ html.dark .markdown-content a:hover {
 
 /* 제목 */
 .markdown-content h1 {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
   margin-top: 24px;
   margin-bottom: 16px;
 }
 
 .markdown-content h2 {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   margin-top: 20px;
   margin-bottom: 12px;
 }
 
 .markdown-content h3 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   margin-top: 16px;
   margin-bottom: 8px;
 }
 
 .markdown-content h4 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   margin-top: 12px;
   margin-bottom: 8px;

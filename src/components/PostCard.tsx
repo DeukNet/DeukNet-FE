@@ -1,18 +1,33 @@
-import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import type { PostSearchResponse } from '../types/api';
+import { useViewTransitionNavigate } from '../hooks/useViewTransition';
 import '../styles/PostCard.css';
 
 interface PostCardProps {
   post: PostSearchResponse;
   showCategory?: boolean;
   size?: 'small' | 'medium' | 'large';
+  index?: number;
 }
 
-export const PostCard = ({ post, showCategory = true, size = 'medium' }: PostCardProps) => {
+export const PostCard = ({ post, showCategory = true, size = 'medium', index = 0 }: PostCardProps) => {
+  const navigate = useViewTransitionNavigate();
+
+  const handleClick = () => {
+    navigate(`/posts/${post.id}`);
+  };
+
   return (
-    <Link
-      to={`/posts/${post.id}`}
+    <motion.div
+      onClick={handleClick}
       className={`post-card size-${size}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.3,
+        delay: index * 0.05,
+        ease: "easeOut"
+      }}
     >
       {/* 썸네일 이미지 */}
       {post.thumbnailImageUrl && (
@@ -59,6 +74,6 @@ export const PostCard = ({ post, showCategory = true, size = 'medium' }: PostCar
           </span>
         </div>
       </div>
-    </Link>
+    </motion.div>
   );
 };

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { categoryService } from '../services/categoryService';
-import type { Category } from '../types/api';
+import { CategoryScroller } from '../components/CategoryScroller';
+import type { Category, CategoryRankingResponse } from '../types/api';
+import { getBookmarks, type CategoryBookmark } from '../utils/categoryBookmarks';
 import '../styles/CategoryListPage.css';
 
 interface CategoryTreeNode extends Category {
@@ -12,17 +14,43 @@ export const CategoryListPage = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [bookmarks, setBookmarks] = useState<CategoryBookmark[]>(() => getBookmarks());
+  const [categoryRanking, setCategoryRanking] = useState<CategoryRankingResponse[]>([]);
+  const [rankingLoading, setRankingLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
+  // 북마크 업데이트 리스너
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setBookmarks(getBookmarks());
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('bookmarksUpdated' as any, handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('bookmarksUpdated' as any, handleStorageChange);
+    };
+  }, []);
+
+  // 카테고리 및 랭킹 조회
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const data = await categoryService.getAllCategories();
-        setCategories(data);
+        setRankingLoading(true);
+        const [allCategories, ranking] = await Promise.all([
+          categoryService.getAllCategories(),
+          categoryService.getCategoryRanking(10)
+        ]);
+        setCategories(allCategories);
+        setCategoryRanking(ranking);
       } catch (error) {
         console.error('Failed to fetch categories:', error);
       } finally {
         setLoading(false);
+        setRankingLoading(false);
       }
     };
 
@@ -56,6 +84,17 @@ export const CategoryListPage = () => {
     });
 
     return rootCategories;
+  };
+
+  // 검색어로 카테고리 필터링
+  const filterCategories = (categories: Category[], query: string): Category[] => {
+    if (!query.trim()) return categories;
+
+    const lowerQuery = query.toLowerCase();
+    return categories.filter(category =>
+      category.name.toLowerCase().includes(lowerQuery) ||
+      category.description?.toLowerCase().includes(lowerQuery)
+    );
   };
 
   // 카테고리 클릭 핸들러
@@ -101,22 +140,86 @@ export const CategoryListPage = () => {
     ));
   };
 
-  if (loading) {
-    return <div className="loading-message">로딩 중...</div>;
-  }
-
-  const categoryTree = buildCategoryTree(categories);
+  const filteredCategories = filterCategories(categories, searchQuery);
+  const categoryTree = buildCategoryTree(filteredCategories);
 
   return (
     <div className="category-list-page">
       <div className="category-list-header">
-        <h1>카테고리 전체보기</h1>
-        <p>관심있는 카테고리를 선택해보세요</p>
+        <h1>카테고리</h1>
       </div>
 
       <div className="category-list-content">
-        {categoryTree.length === 0 ? (
-          <div className="empty-message">카테고리가 없습니다</div>
+        {/* 카테고리 즐겨찾기 */}
+        {bookmarks.length > 0 && (
+          <>
+            <h2 className="section-title">카테고리 즐겨찾기</h2>
+            <div className="category-scroller-wrapper">
+              <CategoryScroller
+                categories={bookmarks.map(b => ({
+                  id: b.id,
+                  name: b.name,
+                  thumbnailUrl: b.thumbnailImageUrl
+                }))}
+              />
+            </div>
+          </>
+        )}
+
+        {/* 인기 카테고리 */}
+        <h2 className="section-title">인기 카테고리</h2>
+        {rankingLoading ? (
+          <div className="loading-message">로딩 중...</div>
+        ) : categoryRanking.length === 0 ? (
+          <div className="empty-message">인기 카테고리가 없습니다</div>
+        ) : (
+          <div className="category-scroller-wrapper">
+            <CategoryScroller
+              categories={categoryRanking.map(ranking => {
+                const categoryDetail = categories.find(c => c.id === ranking.categoryId);
+                return {
+                  id: ranking.categoryId,
+                  name: ranking.categoryName,
+                  thumbnailUrl: categoryDetail?.thumbnailImageUrl
+                };
+              })}
+            />
+          </div>
+        )}
+
+        {/* 전체 카테고리 보기 */}
+        <h2 className="section-title">전체 카테고리</h2>
+
+        {/* 검색 바 */}
+        <div className="category-search-container">
+          <form className="category-search-form" onSubmit={(e) => e.preventDefault()}>
+            <input
+              type="text"
+              placeholder="카테고리 검색..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="category-search-input"
+              autoComplete="off"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="category-search-clear"
+              >
+                초기화
+              </button>
+            )}
+          </form>
+        </div>
+
+        {/* 카테고리 트리 */}
+        {loading ? (
+          <div className="loading-message">로딩 중...</div>
+        ) : categoryTree.length === 0 ? (
+          <div className="empty-message">
+            {searchQuery ? '검색 결과가 없습니다' : '카테고리가 없습니다'}
+          </div>
         ) : (
           <div className="category-tree-container">
             {renderCategoryTree(categoryTree)}

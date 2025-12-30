@@ -1,0 +1,67 @@
+/* 카테고리 썸네일 공통 스타일 */
+.category-thumbnail {
+  flex-shrink: 0;
+  width: 115px;
+  height: 115px;
+  padding: 0;
+  background: #1a1a1a;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.category-thumbnail-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: background 0.2s;
+}
+
+.category-thumbnail:hover .category-thumbnail-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.category-thumbnail-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.3;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .category-thumbnail {
+    width: 85px;
+    height: 85px;
+  }
+
+  .category-thumbnail-name {
+    font-size: 12px;
+  }
+}

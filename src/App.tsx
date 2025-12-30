@@ -6,6 +6,7 @@ import { DarkModeProvider } from './contexts/DarkModeContext';
 import { Layout } from './components/Layout';
 import { MainPage } from './pages/MainPage';
 import { CategoryPage } from './pages/CategoryPage';
+import { CategoryEditPage } from './pages/CategoryEditPage';
 import { CategoryListPage } from './pages/CategoryListPage';
 import { PostListPage } from './pages/PostListPage';
 import { PostDetailPage } from './pages/PostDetailPage';
@@ -91,6 +92,14 @@ function App() {
             element={
               <Layout>
                 <CategoryPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/categories/:categoryId/edit"
+            element={
+              <Layout>
+                <CategoryEditPage />
               </Layout>
             }
           />

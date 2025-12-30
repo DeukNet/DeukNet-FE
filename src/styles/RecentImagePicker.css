@@ -37,7 +37,7 @@
 
 .recent-image-picker-header h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: #ffffff;
 }
@@ -45,7 +45,7 @@
 .recent-image-picker-close {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 22px;
   color: #999;
   cursor: pointer;
   padding: 4px 8px;
@@ -61,12 +61,12 @@
 
 .recent-image-picker-empty p {
   margin: 0 0 8px 0;
-  font-size: 15px;
+  font-size: 17px;
   color: #cccccc;
 }
 
 .recent-image-picker-empty-hint {
-  font-size: 13px;
+  font-size: 15px;
   color: #666;
 }
 
@@ -111,7 +111,7 @@
   color: #ffffff;
   border: none;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -129,7 +129,7 @@
 }
 
 .recent-image-filename {
-  font-size: 13px;
+  font-size: 15px;
   color: #cccccc;
   white-space: nowrap;
   overflow: hidden;
@@ -138,7 +138,7 @@
 }
 
 .recent-image-time {
-  font-size: 11px;
+  font-size: 13px;
   color: #999;
 }
 
@@ -151,7 +151,7 @@
 
 .recent-image-picker-hint {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   color: #999;
   text-align: center;
 }
@@ -178,7 +178,7 @@
   }
 
   .recent-image-picker-header h3 {
-    font-size: 15px;
+    font-size: 17px;
   }
 }
 

@@ -11,7 +11,7 @@
   background: #2a2a2a;
   border: 1px solid #555;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: normal;
   cursor: pointer;
 }
@@ -21,7 +21,7 @@
 }
 
 .dropdown-arrow {
-  font-size: 8px;
+  font-size: 10px;
 }
 
 .category-dropdown-menu {
@@ -49,7 +49,7 @@
   background: #2a2a2a;
   color: #ffffff;
   border: 1px solid #555;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
 }
@@ -68,7 +68,7 @@
   padding: 30px 15px;
   text-align: center;
   color: #999;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .category-group {
@@ -93,7 +93,7 @@
 
 .category-name {
   flex: 1;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   color: #ffffff;
 }
@@ -126,7 +126,7 @@
 }
 
 .category-child-item .category-name {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: normal;
   color: #cccccc;
 }

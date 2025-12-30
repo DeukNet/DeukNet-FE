@@ -74,7 +74,7 @@ export interface PostSearchParams {
   status?: PostStatus;
   categoryId?: string;
   authorId?: string;
-  sortType?: 'RECENT' | 'POPULAR' | 'RELEVANCE';
+  sortType?: 'RECENT' | 'RELEVANCE' | 'POPULAR';
   includeAnonymous?: boolean;
   page?: number;
   size?: number;

@@ -6,6 +6,7 @@ import { userService } from '../services/userService';
 import { useAuth } from '../contexts/AuthContext';
 import { PostCard } from '../components/PostCard';
 import type { PostSearchResponse, Category, UserResponse } from '../types/api';
+import { getEasterEggByKeyword } from '../utils/easterEggEffects';
 import '../styles/PostListPage.css';
 
 export const PostListPage = () => {
@@ -31,12 +32,49 @@ export const PostListPage = () => {
 
   const prevFiltersRef = useRef({ categoryId, keyword, viewMode });
 
+  // 이스터 애그 트리거를 위한 상태
+  const [accuracyClickCount, setAccuracyClickCount] = useState(0);
+  const accuracyClickTimerRef = useRef<number | null>(null);
+
   // 검색 키워드가 변경되면 추천 탭에서 최신순으로 전환
   useEffect(() => {
     if (keyword && viewMode === 'featured') {
       setViewMode('recent');
     }
   }, [keyword, viewMode]);
+
+  // 정확도순 버튼 클릭 핸들러 (이스터 애그 트리거)
+  const handleAccuracyClick = () => {
+    setViewMode('recent');
+
+    // 검색어가 있을 때만 이스터 애그 카운트
+    if (keyword) {
+      const newCount = accuracyClickCount + 1;
+      setAccuracyClickCount(newCount);
+
+      // 기존 타이머 클리어
+      if (accuracyClickTimerRef.current) {
+        clearTimeout(accuracyClickTimerRef.current);
+      }
+
+      // 3번 클릭 시 이스터 애그 발동
+      if (newCount >= 3) {
+        // 검색어에 따라 다른 효과 적용
+        const easterEggEffect = getEasterEggByKeyword(keyword);
+        if (easterEggEffect) {
+          easterEggEffect();
+        }
+
+        // 카운트 리셋
+        setAccuracyClickCount(0);
+      } else {
+        // 2초 후 카운트 리셋
+        accuracyClickTimerRef.current = window.setTimeout(() => {
+          setAccuracyClickCount(0);
+        }, 2000);
+      }
+    }
+  };
 
   // 카테고리 목록 조회
   useEffect(() => {
@@ -163,7 +201,7 @@ export const PostListPage = () => {
           response = await postService.searchPosts({
             keyword: keyword || undefined,
             categoryId: categoryId || undefined,
-            sortType: viewMode === 'popular' ? 'POPULAR' : 'RECENT',
+            sortType: viewMode === 'popular' ? 'POPULAR' : (keyword ? 'RELEVANCE' : 'RECENT'),
             page: currentPage,
             size: 20,
           });
@@ -333,10 +371,10 @@ export const PostListPage = () => {
         {/* 탭 및 글쓰기 버튼 */}
         <div className="view-tabs">
           <button
-            onClick={() => setViewMode('recent')}
+            onClick={handleAccuracyClick}
             className={`tab-button ${viewMode === 'recent' ? 'active' : ''}`}
           >
-            최신순
+            {keyword ? '정확도순' : '최신순'}
           </button>
           <button
             onClick={() => setViewMode('popular')}
@@ -363,7 +401,7 @@ export const PostListPage = () => {
         {/* 게시물 목록 */}
         <div className="posts-box">
           <div className="posts-box-header">
-            {viewMode === 'recent' && '최신 게시물'}
+            {viewMode === 'recent' && (keyword ? '정확도순 게시물' : '최신 게시물')}
             {viewMode === 'popular' && '인기 게시물'}
             {viewMode === 'featured' && '추천 게시물'}
           </div>

@@ -1,40 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { postService } from '../services/postService';
-import { categoryService } from '../services/categoryService';
 import { PostCard } from '../components/PostCard';
-import type { PostSearchResponse, CategoryRankingResponse } from '../types/api';
+import type { PostSearchResponse } from '../types/api';
 import '../styles/MainPage.css';
 
 export const MainPage = () => {
-  const navigate = useNavigate();
   const [trendingPosts, setTrendingPosts] = useState<PostSearchResponse[]>([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
   const [showAllTrending, setShowAllTrending] = useState(false);
-  const [categoryRanking, setCategoryRanking] = useState<CategoryRankingResponse[]>([]);
-  const [rankingLoading, setRankingLoading] = useState(true);
   const [allPosts, setAllPosts] = useState<PostSearchResponse[]>([]);
   const [allPostsLoading, setAllPostsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [viewMode, setViewMode] = useState<'recent' | 'popular' | 'featured'>('recent');
-
-  // 카테고리 랭킹 조회
-  useEffect(() => {
-    const fetchCategoryRanking = async () => {
-      try {
-        setRankingLoading(true);
-        const ranking = await categoryService.getCategoryRanking(10);
-        setCategoryRanking(ranking);
-      } catch (error) {
-        console.error('Failed to fetch category ranking:', error);
-      } finally {
-        setRankingLoading(false);
-      }
-    };
-
-    fetchCategoryRanking();
-  }, []);
 
   // 실시간 인기 게시물 조회
   useEffect(() => {
@@ -92,33 +70,6 @@ export const MainPage = () => {
   return (
     <div className="main-page">
       <div className="main-content-wrapper">
-        {/* 인기 카테고리 */}
-        <div className="category-ranking-section">
-          <h2 className="section-title">인기 카테고리</h2>
-          {rankingLoading ? (
-            <div className="loading-message">로딩 중...</div>
-          ) : !categoryRanking || categoryRanking.length === 0 ? (
-            <div className="empty-message">카테고리가 없습니다</div>
-          ) : (
-            <div className="category-ranking-container">
-              {categoryRanking.map((category, index) => (
-                <div
-                  key={category.categoryId}
-                  className={`ranking-item ${index < 3 ? 'top-three' : ''}`}
-                  onClick={() => navigate(`/categories/${category.categoryId}`)}
-                >
-                  <span className="ranking-number">{index + 1}</span>
-                  <span className="ranking-name">{category.categoryName}</span>
-                  <span className="ranking-stats">
-                    <span>게시물 {category.postCount}</span>
-                    <span>조회 {category.totalViewCount}</span>
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* 실시간 인기 게시물 */}
         <div className="trending-section">
           <h2 className="section-title">실시간 인기 게시물</h2>
@@ -129,12 +80,13 @@ export const MainPage = () => {
           ) : (
             <>
               <div className="trending-posts-list">
-                {(showAllTrending ? trendingPosts : trendingPosts.slice(0, 3)).map((post) => (
+                {(showAllTrending ? trendingPosts : trendingPosts.slice(0, 3)).map((post, index) => (
                   <PostCard
                     key={post.id}
                     post={post}
                     showCategory={true}
                     size="small"
+                    index={index}
                   />
                 ))}
               </div>
@@ -202,12 +154,13 @@ export const MainPage = () => {
               ) : (
                 <>
                   <div className="posts-list">
-                    {allPosts.map((post) => (
+                    {allPosts.map((post, index) => (
                       <PostCard
                         key={post.id}
                         post={post}
                         showCategory={true}
                         size="medium"
+                        index={index}
                       />
                     ))}
                   </div>

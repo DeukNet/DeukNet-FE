@@ -6,7 +6,7 @@
 /* 카테고리 헤더 배너 */
 .category-header-banner {
   width: 100%;
-  height: 150px;
+  height: 200px;
   position: relative;
   overflow: hidden;
   border-bottom: 2px solid #555;
@@ -15,10 +15,11 @@
 .category-header-overlay {
   width: 100%;
   height: 100%;
-  background: #252525;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .category-header-content {
@@ -29,15 +30,54 @@
 }
 
 .category-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   margin-bottom: 8px;
 }
 
 .category-description {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.4;
   color: #cccccc;
+}
+
+/* 카테고리 헤더 액션 버튼들 */
+.category-header-actions {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* 수정 버튼 */
+.edit-button {
+  padding: 8px 15px;
+  background: rgba(42, 42, 42, 0.9);
+  color: #ffffff;
+  border: 1px solid #555;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* 북마크 버튼 */
+.bookmark-button {
+  padding: 8px 15px;
+  background: rgba(42, 42, 42, 0.9);
+  color: #ffffff;
+  border: 1px solid #555;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.bookmark-button.bookmarked {
+  background: rgba(58, 58, 58, 0.9);
+  color: #ffd700;
+  border-color: #ffd700;
 }
 
 /* 하위 카테고리 섹션 */
@@ -48,7 +88,7 @@
 }
 
 .section-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 10px;
@@ -64,13 +104,13 @@
 
 .child-category-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 15px;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
   border-bottom: 1px solid #555;
   cursor: pointer;
-  font-size: 13px;
-  background: #1a1a1a;
+  font-size: 15px;
+  background: #2a2a2a;
 }
 
 .child-category-item:last-child {
@@ -78,14 +118,43 @@
 }
 
 .child-category-item:hover {
-  background: #353535;
+  background: #3a3a3a;
+}
+
+.child-category-thumbnail {
+  flex-shrink: 0;
+  width: 112px;
+  height: 112px;
+  background: #1a1a1a;
+  border-right: 1px solid #555;
+  overflow: hidden;
+  background-size: 56px 56px;
+  background-repeat: repeat;
+  background-position: 0 0;
+}
+
+.child-category-thumbnail img {
+  display: none;
+}
+
+.child-category-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+  min-width: 0;
 }
 
 .child-category-name {
-  flex: 1;
   display: flex;
   align-items: center;
   color: #cccccc;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .child-category-indent {
@@ -96,9 +165,7 @@
 
 .child-category-description {
   color: #999;
-  font-size: 11px;
-  margin-left: 15px;
-  max-width: 300px;
+  font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -134,7 +201,7 @@
   border: none;
   border-right: 1px solid #555;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 14px;
   outline: none;
 }
 
@@ -150,7 +217,7 @@
   border: none;
   border-right: 1px solid #555;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: normal;
 }
 
@@ -165,73 +232,86 @@
   color: #ff6666;
 }
 
-.posts-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
+/* 탭 및 글쓰기 버튼 */
 .view-tabs {
   display: flex;
   gap: 0;
   border: 1px solid #555;
+  margin-bottom: 10px;
 }
 
 .tab-button {
   padding: 8px 15px;
-  background: #1a1a1a;
+  background: #2a2a2a;
   color: #cccccc;
   border: none;
   border-right: 1px solid #555;
   cursor: pointer;
   font-weight: normal;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .tab-button:hover {
-  background: #252525;
+  background: #3a3a3a;
 }
 
 .tab-button.active {
-  background: #252525;
+  background: #3a3a3a;
   color: #ffffff;
   font-weight: bold;
 }
 
 .tab-button.featured.active {
-  background: #252525;
+  background: #3a3a3a;
 }
 
 .write-button {
   padding: 8px 15px;
-  background: #1a1a1a;
+  background: #2a2a2a;
   color: #ffffff;
-  border: 1px solid #555;
+  border: 0;
+  border-left: 1px solid #555;
   cursor: pointer;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 14px;
+  margin-left: auto;
 }
 
 .write-button:hover {
-  background: #252525;
+  background: #3a3a3a;
 }
 
-.loading,
+/* 게시물 박스 */
+.posts-box {
+  background: #3a3a3a;
+  border: 1px solid #555;
+}
+
+.posts-box-header {
+  background: #3a3a3a;
+  color: #ffffff;
+  padding: 8px 10px;
+  font-weight: bold;
+  font-size: 14px;
+  border-bottom: 1px solid #555;
+}
+
+.posts-box-content {
+  padding: 0;
+  background: #2a2a2a;
+}
+
 .posts-empty {
   text-align: center;
   padding: 40px 20px;
   color: #999;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .posts-list {
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 1px solid #555;
 }
 
 /* 페이지네이션 */
@@ -242,22 +322,21 @@
   justify-content: center;
   gap: 0;
   align-items: center;
-  flex-wrap: wrap;
   border: 1px solid #555;
 }
 
 .pagination-button {
   padding: 6px 10px;
   cursor: pointer;
-  background: #1a1a1a;
+  background: #2a2a2a;
   border: none;
   border-right: 1px solid #555;
   color: #cccccc;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .pagination-button:hover:not(:disabled) {
-  background: #252525;
+  background: #3a3a3a;
 }
 
 .pagination-button:disabled {
@@ -266,7 +345,7 @@
 }
 
 .pagination-button.active {
-  background: #252525;
+  background: #3a3a3a;
   color: #ffffff;
   font-weight: bold;
 }
@@ -274,21 +353,36 @@
 .pagination-info {
   margin-left: 10px;
   color: #999;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 /* 반응형 스타일 */
 @media (max-width: 768px) {
   .category-header-banner {
-    height: 120px;
+    height: 160px;
   }
 
   .category-title {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .category-description {
-    font-size: 11px;
+    font-size: 13px;
+  }
+
+  .category-header-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .edit-button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .bookmark-button {
+    padding: 6px 12px;
+    font-size: 13px;
   }
 
   .child-categories-section {
@@ -296,18 +390,25 @@
   }
 
   .section-title {
-    font-size: 13px;
+    font-size: 15px;
   }
 
-  .child-category-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
+  .child-category-thumbnail {
+    width: 96px;
+    height: 96px;
+    background-size: 48px 48px;
+  }
+
+  .child-category-content {
+    padding: 6px 10px;
+  }
+
+  .child-category-name {
+    font-size: 14px;
   }
 
   .child-category-description {
-    margin-left: 0;
-    max-width: 100%;
+    font-size: 12px;
   }
 
   .posts-section {
@@ -325,7 +426,7 @@
   .category-search-button,
   .category-search-clear {
     padding: 6px 12px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .posts-header {
@@ -335,44 +436,73 @@
 
   .view-tabs {
     width: 100%;
+    flex-wrap: wrap;
   }
 
   .tab-button {
     flex: 1;
     padding: 6px 10px;
-    font-size: 11px;
+    font-size: 13px;
+    min-width: 0;
   }
 
   .write-button {
+    flex: 0 0 100%;
     width: 100%;
+    border-left: 0;
+    border-top: 1px solid #555 !important;
+    margin-left: 0;
   }
 }
 
 @media (max-width: 480px) {
   .category-header-banner {
-    height: 100px;
+    height: 120px;
   }
 
   .category-title {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .category-description {
-    font-size: 10px;
+    font-size: 12px;
   }
 
-  .child-category-item {
+  .edit-button {
+    padding: 5px 10px;
     font-size: 12px;
-    padding: 8px 10px;
+  }
+
+  .bookmark-button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .child-category-thumbnail {
+    width: 88px;
+    height: 88px;
+    background-size: 44px 44px;
+  }
+
+  .child-category-content {
+    padding: 5px 8px;
+  }
+
+  .child-category-name {
+    font-size: 13px;
+  }
+
+  .child-category-description {
+    font-size: 11px;
   }
 
   .pagination-button {
     padding: 5px 8px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .pagination-info {
     margin-left: 8px;
-    font-size: 10px;
+    font-size: 12px;
   }
 }

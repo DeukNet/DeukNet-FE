@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import confetti from 'canvas-confetti';
 import { postService } from '../services/postService';
 import { reactionService } from '../services/reactionService';
 import { commentService } from '../services/commentService';
@@ -9,6 +10,7 @@ import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { MarkdownEditor } from '../components/MarkdownEditor';
 import { PostCard } from '../components/PostCard';
 import type { PostSearchResponse, Comment } from '../types/api';
+import { useViewTransitionNavigate } from '../hooks/useViewTransition';
 import {
   trackViewPost,
   trackLikePost,
@@ -23,7 +25,7 @@ import {
 
 export const PostDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const navigate = useViewTransitionNavigate();
   const [searchParams] = useSearchParams();
   const { isAuthenticated } = useAuth();
   const [post, setPost] = useState<PostSearchResponse | null>(null);
@@ -190,11 +192,32 @@ export const PostDetailPage = () => {
         await reactionService.removeReaction(id, post.userLikeReactionId);
         trackUnlikePost(id);
       } else {
-        // Add like
+        // Add like - 파티클 효과 (1번만 터지기)
         const reactionId = await reactionService.addReaction(id, { reactionType: 'LIKE' });
         // Update the reaction ID in optimistic state
         setPost(prev => prev ? { ...prev, userLikeReactionId: reactionId } : null);
         trackLikePost(id);
+
+        // 초록색/금색 파티클 효과 - 1번만 터지기
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min: number, max: number) {
+          return Math.random() * (max - min) + min;
+        }
+
+        // 한 번 폭발
+        confetti({
+          ...defaults,
+          particleCount: 150,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+          colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
+        });
+        confetti({
+          ...defaults,
+          particleCount: 150,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+          colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
+        });
       }
     } catch (error: any) {
       console.error('Failed to handle like:', error);
@@ -249,7 +272,7 @@ export const PostDetailPage = () => {
         await reactionService.removeReaction(id, post.userDislikeReactionId);
         trackUndislikePost(id);
       } else {
-        // Add dislike
+        // Add dislike - 파티클 효과 없음
         const reactionId = await reactionService.addReaction(id, { reactionType: 'DISLIKE' });
         // Update the reaction ID in optimistic state
         setPost(prev => prev ? { ...prev, userDislikeReactionId: reactionId } : null);
@@ -453,9 +476,9 @@ export const PostDetailPage = () => {
       <header style={{ marginBottom: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h1 style={{ fontSize: '24px', marginBottom: '5px' }}>DeukNet</h1>
-            <div style={{ fontSize: '12px', color: '#666' }}>
-              <Link to="/">홈</Link>
+            <h1 style={{ fontSize: '26px', marginBottom: '5px', color: '#ffffff' }}>DeukNet</h1>
+            <div style={{ fontSize: '14px', color: '#999' }}>
+              <Link to="/" style={{ color: '#66b3ff' }}>홈</Link>
               <span> &gt; </span>
               <span>게시판</span>
               {post.categoryName && (
@@ -480,7 +503,7 @@ export const PostDetailPage = () => {
               color: '#ffffff',
               border: '1px solid #555',
               cursor: 'pointer',
-              fontSize: '12px',
+              fontSize: '14px',
               fontWeight: 'bold'
             }}
             onMouseEnter={(e) => e.currentTarget.style.background = '#3a3a3a'}
@@ -494,7 +517,7 @@ export const PostDetailPage = () => {
       <div className="box">
         <div className="box-header">{post.title}</div>
         <div style={{ padding: '10px 15px', borderBottom: '1px solid #555', background: '#3a3a3a' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#999' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', color: '#999' }}>
             <div>
               {post.authorId ? (
                 <Link
@@ -558,10 +581,9 @@ export const PostDetailPage = () => {
                 padding: '6px 12px',
                 background: '#0066cc',
                 color: '#ffffff',
-                border: 'none',
-                borderRadius: '4px',
+                border: '1px solid #0066cc',
                 cursor: 'pointer',
-                fontSize: '13px'
+                fontSize: '14px'
               }}
             >
               댓글 보기
@@ -643,12 +665,40 @@ export const PostDetailPage = () => {
 
       <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'space-between' }}>
         <Link to="/">
-          <button>목록</button>
+          <button style={{
+            background: '#2a2a2a',
+            color: '#ffffff',
+            border: '1px solid #555',
+            padding: '8px 15px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}>목록</button>
         </Link>
         {post.isAuthor && (
           <div>
-            <button onClick={handleEdit} style={{ marginRight: '5px' }}>수정</button>
-            <button onClick={handleDelete}>삭제</button>
+            <button
+              onClick={handleEdit}
+              style={{
+                marginRight: '5px',
+                background: '#2a2a2a',
+                color: '#ffffff',
+                border: '1px solid #555',
+                padding: '8px 15px',
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+            >수정</button>
+            <button
+              onClick={handleDelete}
+              style={{
+                background: '#2a2a2a',
+                color: '#ffffff',
+                border: '1px solid #555',
+                padding: '8px 15px',
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+            >삭제</button>
           </div>
         )}
       </div>
@@ -681,11 +731,11 @@ export const PostDetailPage = () => {
             ) : (
               <span style={{ fontWeight: 'bold', color: '#ffffff', fontSize: '14px' }}>{comment.authorDisplayName}</span>
             )}
-            <span style={{ marginLeft: '8px', color: '#999', fontSize: '12px' }}>
+            <span style={{ marginLeft: '8px', color: '#999', fontSize: '14px' }}>
               @{comment.authorUsername}
             </span>
           </div>
-          <span style={{ color: '#999', fontSize: '12px' }}>
+          <span style={{ color: '#999', fontSize: '14px' }}>
             {new Date(comment.createdAt).toLocaleString('ko-KR')}
           </span>
         </div>
@@ -726,7 +776,7 @@ export const PostDetailPage = () => {
                     setReplyingToCommentId(comment.id);
                     setReplyText('');
                   }}
-                  style={{ fontSize: '12px', color: '#66b3ff', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                  style={{ fontSize: '14px', color: '#66b3ff', background: 'transparent', border: 'none', cursor: 'pointer' }}
                 >
                   답글 작성
                 </button>
@@ -735,13 +785,13 @@ export const PostDetailPage = () => {
                 <div style={{ textAlign: 'right' }}>
                   <button
                     onClick={() => handleCommentEdit(comment.id, comment.content)}
-                    style={{ fontSize: '12px', marginRight: '5px' }}
+                    style={{ fontSize: '14px', marginRight: '5px' }}
                   >
                     수정
                   </button>
                   <button
                     onClick={() => handleCommentDelete(comment.id)}
-                    style={{ fontSize: '12px' }}
+                    style={{ fontSize: '14px' }}
                   >
                     삭제
                   </button>

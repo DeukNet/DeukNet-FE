@@ -23,7 +23,7 @@
 }
 
 .profile-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: #ffffff;
 }
@@ -34,7 +34,7 @@
   color: #ffffff;
   border: 1px solid #555;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .edit-button:hover {
@@ -47,7 +47,7 @@
   padding: 10px;
   margin-bottom: 15px;
   border: 1px solid #555;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .error-message {
@@ -89,7 +89,7 @@
 }
 
 .profile-avatar-initial {
-  font-size: 40px;
+  font-size: 42px;
   color: #999;
   font-weight: bold;
 }
@@ -99,14 +99,14 @@
 }
 
 .profile-name {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 5px;
 }
 
 .profile-username {
-  font-size: 13px;
+  font-size: 15px;
   color: #999;
   margin-bottom: 15px;
 }
@@ -118,14 +118,14 @@
 }
 
 .profile-bio-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 8px;
 }
 
 .profile-bio-content {
-  font-size: 12px;
+  font-size: 14px;
   color: #cccccc;
   line-height: 1.5;
   white-space: pre-wrap;
@@ -142,7 +142,7 @@
 }
 
 .profile-bio-empty {
-  font-size: 12px;
+  font-size: 14px;
   color: #999;
 }
 
@@ -160,7 +160,7 @@
 }
 
 .form-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   color: #cccccc;
 }
@@ -171,7 +171,7 @@
   background: #2a2a2a;
   color: #ffffff;
   border: 1px solid #555;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .form-input:focus,
@@ -197,7 +197,7 @@
   color: #ffffff;
   border: 1px solid #555;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
@@ -231,7 +231,7 @@
   padding: 8px 15px;
   border: 1px solid #555;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -261,7 +261,7 @@
 .back-link {
   display: inline-block;
   margin-top: 15px;
-  font-size: 12px;
+  font-size: 14px;
   color: #999;
   text-decoration: none;
 }
@@ -278,7 +278,7 @@
 }
 
 .posts-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 15px;
@@ -291,7 +291,7 @@
   text-align: center;
   padding: 40px 20px;
   color: #999;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .posts-list {
@@ -317,7 +317,7 @@
   border: none;
   border-right: 1px solid #555;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .pagination-button:hover:not(:disabled) {
@@ -332,7 +332,7 @@
 .pagination-info {
   padding: 6px 12px;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* 반응형 */

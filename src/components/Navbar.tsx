@@ -47,6 +47,11 @@ export const Navbar = () => {
               <span className="navbar-logo-text">DeukNet</span>
             </Link>
             <div className="navbar-links">
+              {isAuthenticated && (
+                <Link to="/posts/select-category" className="navbar-link">
+                  글쓰기
+                </Link>
+              )}
               <Link to="/posts" className="navbar-link">
                 전체 게시물
               </Link>

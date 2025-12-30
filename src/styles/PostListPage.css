@@ -11,7 +11,7 @@
 }
 
 .category-header h2 {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 5px;
@@ -32,7 +32,7 @@
   padding: 8px 10px;
   background: #3a3a3a;
   border: 1px solid #555;
-  font-size: 12px;
+  font-size: 14px;
   color: #ffffff;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .search-section-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   color: #ffffff;
   padding: 8px 10px;
@@ -70,7 +70,7 @@
 }
 
 .total-pages-info {
-  font-size: 11px;
+  font-size: 13px;
   color: #999;
   font-weight: normal;
 }
@@ -91,7 +91,7 @@
   color: #cccccc;
   border: 1px solid #555;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .search-pagination .pagination-button:hover:not(:disabled) {
@@ -105,7 +105,7 @@
 }
 
 .search-pagination .pagination-text {
-  font-size: 11px;
+  font-size: 13px;
   color: #999;
 }
 
@@ -142,13 +142,13 @@
 }
 
 .category-name {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: bold;
   color: #ffffff;
 }
 
 .category-description {
-  font-size: 11px;
+  font-size: 13px;
   color: #999;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -177,13 +177,13 @@
 }
 
 .user-display-name {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: bold;
   color: #ffffff;
 }
 
 .user-username {
-  font-size: 11px;
+  font-size: 13px;
   color: #999;
 }
 
@@ -221,7 +221,7 @@
 
 .info-box-header {
   padding: 5px 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   color: #ffffff;
   border-bottom: 1px solid #555;
@@ -249,7 +249,7 @@
   text-align: center;
   padding: 10px;
   color: #999;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .post-list {
@@ -270,7 +270,7 @@
   background: #2a2a2a;
   border-bottom: 1px solid #555;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 13px;
   color: #cccccc;
   display: flex;
   align-items: center;
@@ -286,7 +286,7 @@
 }
 
 .interest-category-item .count {
-  font-size: 10px;
+  font-size: 12px;
   color: #999;
 }
 
@@ -309,7 +309,7 @@
 }
 
 .ranking-number {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: bold;
   color: #999;
   min-width: 18px;
@@ -322,7 +322,7 @@
 
 .ranking-name {
   flex: 1;
-  font-size: 11px;
+  font-size: 13px;
   color: #cccccc;
 }
 
@@ -332,7 +332,7 @@
 }
 
 .ranking-stats {
-  font-size: 10px;
+  font-size: 12px;
   color: #999;
   white-space: nowrap;
   display: flex;
@@ -356,7 +356,7 @@
   border-right: 1px solid #555;
   cursor: pointer;
   font-weight: normal;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .tab-button.active {
@@ -377,7 +377,7 @@
   cursor: pointer;
   font-weight: bold;
   margin-left: auto;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .write-button:hover {
@@ -395,7 +395,7 @@
   color: #ffffff;
   padding: 8px 10px;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 14px;
   border-bottom: 1px solid #555;
 }
 
@@ -408,7 +408,7 @@
   text-align: center;
   padding: 40px;
   color: #999;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .posts-list {
@@ -435,7 +435,7 @@
   border: none;
   border-right: 1px solid #555;
   color: #cccccc;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .pagination-button:disabled {
@@ -452,7 +452,7 @@
 .pagination-info {
   margin-left: 10px;
   color: #999;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 /* 반응형 스타일 */
@@ -477,7 +477,7 @@
 
   .tab-button {
     padding: 6px 12px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .write-button {
@@ -489,21 +489,21 @@
 
 @media (max-width: 480px) {
   .category-header h2 {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .tab-button {
     padding: 5px 10px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .pagination-button {
     padding: 5px 8px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .pagination-info {
     margin-left: 8px;
-    font-size: 10px;
+    font-size: 12px;
   }
 }

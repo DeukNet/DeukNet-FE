@@ -1,17 +1,21 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { categoryService } from '../services/categoryService';
 import { postService } from '../services/postService';
 import { useAuth } from '../contexts/AuthContext';
 import { PostCard } from '../components/PostCard';
 import type { Category, PostSearchResponse } from '../types/api';
 import { trackViewCategory } from '../utils/analyticsEvents';
+import { isBookmarked, toggleBookmark } from '../utils/categoryBookmarks';
+import { useViewTransitionNavigate } from '../hooks/useViewTransition';
+import { getEasterEggByKeyword } from '../utils/easterEggEffects';
 import '../styles/CategoryPage.css';
 
 export const CategoryPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const navigate = useViewTransitionNavigate();
+  const { isAuthenticated, user } = useAuth();
   const [category, setCategory] = useState<Category | null>(null);
   const [childCategories, setChildCategories] = useState<Category[]>([]);
   const [posts, setPosts] = useState<PostSearchResponse[]>([]);
@@ -21,6 +25,62 @@ export const CategoryPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [inputKeyword, setInputKeyword] = useState(''); // 입력 필드용
   const [searchKeyword, setSearchKeyword] = useState(''); // 실제 검색용
+  const [bookmarked, setBookmarked] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
+  // 이스터 애그 트리거를 위한 상태
+  const [accuracyClickCount, setAccuracyClickCount] = useState(0);
+  const accuracyClickTimerRef = useRef<number | null>(null);
+
+  // 북마크 상태 확인
+  useEffect(() => {
+    if (categoryId) {
+      setBookmarked(isBookmarked(categoryId));
+    }
+  }, [categoryId]);
+
+  // Parallax 스크롤 효과
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 정확도순 버튼 클릭 핸들러 (이스터 애그 트리거)
+  const handleAccuracyClick = () => {
+    setViewMode('recent');
+
+    // 검색어가 있을 때만 이스터 애그 카운트
+    if (searchKeyword) {
+      const newCount = accuracyClickCount + 1;
+      setAccuracyClickCount(newCount);
+
+      // 기존 타이머 클리어
+      if (accuracyClickTimerRef.current) {
+        clearTimeout(accuracyClickTimerRef.current);
+      }
+
+      // 3번 클릭 시 이스터 애그 발동
+      if (newCount >= 3) {
+        // 검색어에 따라 다른 효과 적용
+        const easterEggEffect = getEasterEggByKeyword(searchKeyword);
+        if (easterEggEffect) {
+          easterEggEffect();
+        }
+
+        // 카운트 리셋
+        setAccuracyClickCount(0);
+      } else {
+        // 2초 후 카운트 리셋
+        accuracyClickTimerRef.current = window.setTimeout(() => {
+          setAccuracyClickCount(0);
+        }, 2000);
+      }
+    }
+  };
 
   // 검색 키워드가 변경되면 추천 탭에서 최신순으로 전환
   useEffect(() => {
@@ -99,7 +159,7 @@ export const CategoryPage = () => {
           response = await postService.searchPosts({
             categoryId,
             keyword: searchKeyword || undefined,
-            sortType: viewMode === 'popular' ? 'POPULAR' : 'RECENT',
+            sortType: viewMode === 'popular' ? 'POPULAR' : (searchKeyword ? 'RELEVANCE' : 'RECENT'),
             page: currentPage,
             size: 20,
           });
@@ -136,6 +196,15 @@ export const CategoryPage = () => {
     setCurrentPage(0);
   };
 
+  const handleBookmarkToggle = () => {
+    if (category && categoryId) {
+      const newBookmarked = toggleBookmark(categoryId, category.name, category.thumbnailImageUrl);
+      setBookmarked(newBookmarked);
+    }
+  };
+
+  const isAdmin = user?.role === 'ADMIN';
+
   if (!category) {
     return <div className="loading">카테고리를 찾을 수 없습니다.</div>;
   }
@@ -148,10 +217,13 @@ export const CategoryPage = () => {
         style={{
           backgroundImage: category.thumbnailImageUrl
             ? `url(${category.thumbnailImageUrl})`
-            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          backgroundSize: category.thumbnailImageUrl ? 'cover' : 'auto',
-          backgroundPosition: 'center',
-          backgroundRepeat: category.thumbnailImageUrl ? 'no-repeat' : 'repeat',
+            : 'none',
+          backgroundColor: category.thumbnailImageUrl ? 'transparent' : '#3a3a3a',
+          backgroundSize: category.thumbnailImageUrl ? 'auto 100%' : 'auto',
+          backgroundPosition: category.thumbnailImageUrl
+            ? `center ${scrollY * 0.5}px`
+            : 'center',
+          backgroundRepeat: category.thumbnailImageUrl ? 'repeat-x' : 'no-repeat',
         }}
       >
         <div className="category-header-overlay">
@@ -161,6 +233,24 @@ export const CategoryPage = () => {
               <p className="category-description">{category.description}</p>
             )}
           </div>
+          <div className="category-header-actions">
+            {isAdmin && (
+              <button
+                className="edit-button"
+                onClick={() => navigate(`/categories/${categoryId}/edit`)}
+                title="카테고리 수정"
+              >
+                수정
+              </button>
+            )}
+            <button
+              className={`bookmark-button ${bookmarked ? 'bookmarked' : ''}`}
+              onClick={handleBookmarkToggle}
+              title={bookmarked ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+            >
+              {bookmarked ? '★ 즐겨찾기' : '☆ 즐겨찾기'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -169,20 +259,40 @@ export const CategoryPage = () => {
         <div className="child-categories-section">
           <h2 className="section-title">하위 카테고리</h2>
           <div className="child-categories-list">
-            {childCategories.map((child) => (
-              <div
+            {childCategories.map((child, index) => (
+              <motion.div
                 key={child.id}
                 className="child-category-item"
                 onClick={() => navigate(`/categories/${child.id}`)}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: index * 0.1,
+                  ease: "easeOut"
+                }}
+                whileHover={{
+                  scale: 1.02,
+                  transition: { duration: 0.2 }
+                }}
+                whileTap={{ scale: 0.98 }}
               >
-                <span className="child-category-name">
-                  <span className="child-category-indent">└─</span>
-                  <strong>{child.name}</strong>
-                </span>
-                {child.description && (
-                  <span className="child-category-description">{child.description}</span>
+                {child.thumbnailImageUrl && (
+                  <div
+                    className="child-category-thumbnail"
+                    style={{ backgroundImage: `url(${child.thumbnailImageUrl})` }}
+                  />
                 )}
-              </div>
+                <div className="child-category-content">
+                  <span className="child-category-name">
+                    <span className="child-category-indent">└─</span>
+                    <strong>{child.name}</strong>
+                  </span>
+                  {child.description && (
+                    <span className="child-category-description">{child.description}</span>
+                  )}
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -216,29 +326,28 @@ export const CategoryPage = () => {
           </form>
         </div>
 
-        <div className="posts-header">
-          <div className="view-tabs">
+        {/* 탭 및 글쓰기 버튼 */}
+        <div className="view-tabs">
+          <button
+            onClick={handleAccuracyClick}
+            className={`tab-button ${viewMode === 'recent' ? 'active' : ''}`}
+          >
+            {searchKeyword ? '정확도순' : '최신순'}
+          </button>
+          <button
+            onClick={() => setViewMode('popular')}
+            className={`tab-button ${viewMode === 'popular' ? 'active' : ''}`}
+          >
+            인기순
+          </button>
+          {!searchKeyword && (
             <button
-              onClick={() => setViewMode('recent')}
-              className={`tab-button ${viewMode === 'recent' ? 'active' : ''}`}
+              onClick={() => setViewMode('featured')}
+              className={`tab-button featured ${viewMode === 'featured' ? 'active' : ''}`}
             >
-              최신순
+              추천
             </button>
-            <button
-              onClick={() => setViewMode('popular')}
-              className={`tab-button ${viewMode === 'popular' ? 'active' : ''}`}
-            >
-              인기순
-            </button>
-            {!searchKeyword && (
-              <button
-                onClick={() => setViewMode('featured')}
-                className={`tab-button featured ${viewMode === 'featured' ? 'active' : ''}`}
-              >
-                추천
-              </button>
-            )}
-          </div>
+          )}
 
           {isAuthenticated && (
             <button onClick={() => navigate(`/posts/new?category=${categoryId}`)} className="write-button">
@@ -247,69 +356,89 @@ export const CategoryPage = () => {
           )}
         </div>
 
-        {loading ? (
-          <div className="loading">로딩 중...</div>
-        ) : !posts || posts.length === 0 ? (
-          <div className="posts-empty">게시물이 없습니다.</div>
-        ) : (
-          <>
-            <div className="posts-list">
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} showCategory={false} size="medium" />
-              ))}
-            </div>
-
-            {/* 페이지네이션 */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button
-                  onClick={() => handlePageChange(0)}
-                  disabled={currentPage === 0}
-                  className="pagination-button"
-                >
-                  ≪
-                </button>
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 0}
-                  className="pagination-button"
-                >
-                  ‹
-                </button>
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const startPage = Math.max(0, Math.min(currentPage - 2, totalPages - 5));
-                  const pageNum = startPage + i;
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`pagination-button ${currentPage === pageNum ? 'active' : ''}`}
-                    >
-                      {pageNum + 1}
-                    </button>
-                  );
-                })}
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage >= totalPages - 1}
-                  className="pagination-button"
-                >
-                  ›
-                </button>
-                <button
-                  onClick={() => handlePageChange(totalPages - 1)}
-                  disabled={currentPage >= totalPages - 1}
-                  className="pagination-button"
-                >
-                  ≫
-                </button>
-                <span className="pagination-info">
-                  {currentPage + 1} / {totalPages} 페이지
-                </span>
+        {/* 게시물 목록 */}
+        <div className="posts-box">
+          <div className="posts-box-header">
+            {viewMode === 'recent' && (searchKeyword ? '정확도순 게시물' : '최신 게시물')}
+            {viewMode === 'popular' && '인기 게시물'}
+            {viewMode === 'featured' && '추천 게시물'}
+          </div>
+          <div className="posts-box-content">
+            {loading ? (
+              <div className="posts-empty">
+                로딩 중...
               </div>
+            ) : posts.length === 0 ? (
+              <div className="posts-empty">
+                게시물이 없습니다.
+              </div>
+            ) : (
+              <>
+                <div className="posts-list">
+                  {posts.map((post, index) => (
+                    <PostCard
+                      key={post.id}
+                      post={post}
+                      showCategory={false}
+                      size="medium"
+                      index={index}
+                    />
+                  ))}
+                </div>
+
+                {/* 페이지네이션 */}
+                {totalPages > 1 && (
+                  <div className="pagination">
+                    <button
+                      onClick={() => handlePageChange(0)}
+                      disabled={currentPage === 0}
+                      className="pagination-button"
+                    >
+                      ≪
+                    </button>
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 0}
+                      className="pagination-button"
+                    >
+                      ‹
+                    </button>
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      const startPage = Math.max(0, Math.min(currentPage - 2, totalPages - 5));
+                      const pageNum = startPage + i;
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`pagination-button ${currentPage === pageNum ? 'active' : ''}`}
+                        >
+                          {pageNum + 1}
+                        </button>
+                      );
+                    })}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage >= totalPages - 1}
+                      className="pagination-button"
+                    >
+                      ›
+                    </button>
+                    <button
+                      onClick={() => handlePageChange(totalPages - 1)}
+                      disabled={currentPage >= totalPages - 1}
+                      className="pagination-button"
+                    >
+                      ≫
+                    </button>
+                    <span className="pagination-info">
+                      {currentPage + 1} / {totalPages} 페이지
+                    </span>
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

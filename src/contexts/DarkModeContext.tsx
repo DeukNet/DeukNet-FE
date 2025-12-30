@@ -11,7 +11,8 @@ export const DarkModeProvider = ({ children }: { children: ReactNode }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // localStorage에서 다크모드 설정 불러오기
     const saved = localStorage.getItem('darkMode');
-    return saved === 'true';
+    // 기본값은 다크모드 (true)
+    return saved === null ? true : saved === 'true';
   });
 
   useEffect(() => {

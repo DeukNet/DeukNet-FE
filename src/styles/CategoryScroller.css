@@ -1,0 +1,68 @@
+/* 카테고리 스크롤러 공통 스타일 */
+.category-scroller-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid #555;
+  background: #2a2a2a;
+}
+
+.category-scroller-button {
+  flex-shrink: 0;
+  width: 40px;
+  height: 115px;
+  background: #2a2a2a;
+  border: none;
+  border-right: 1px solid #555;
+  color: #999;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-scroller-button.right {
+  border-right: none;
+  border-left: 1px solid #555;
+}
+
+.category-scroller-button:hover {
+  background: #3a3a3a;
+  color: #ffffff;
+}
+
+.category-scroller-button:active {
+  background: #4a4a4a;
+}
+
+.category-scroller-scroll {
+  flex: 1;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.category-scroller-scroll::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.category-scroller-item {
+  border-right: 1px solid #555;
+}
+
+.category-scroller-item:last-child {
+  border-right: none;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .category-scroller-button {
+    height: 85px;
+  }
+}
