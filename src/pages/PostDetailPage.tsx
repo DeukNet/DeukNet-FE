@@ -545,7 +545,7 @@ export const PostDetailPage = () => {
           </div>
         </div>
         <div className="box-content">
-          <div style={{ minHeight: '200px' }}>
+          <div style={{ minHeight: '500px' }}>
             <MarkdownRenderer content={post.content || ''} />
           </div>
         </div>
