@@ -11,7 +11,7 @@ interface CategoryTreeNode extends Category {
 
 export const CategoryManagePage = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [parentCategoryId, setParentCategoryId] = useState<string>('');
@@ -66,7 +66,19 @@ export const CategoryManagePage = () => {
       }
     });
 
-    return rootCategories;
+    // 내가 만든 카테고리를 상단에 배치
+    const myCategories: CategoryTreeNode[] = [];
+    const otherCategories: CategoryTreeNode[] = [];
+
+    rootCategories.forEach(node => {
+      if (node.ownerId === user?.id) {
+        myCategories.push(node);
+      } else {
+        otherCategories.push(node);
+      }
+    });
+
+    return [...myCategories, ...otherCategories];
   };
 
   const handleCreateCategory = async () => {
@@ -113,53 +125,73 @@ export const CategoryManagePage = () => {
     }
   };
 
+  // 권한 체크: Admin이거나 카테고리 소유자인 경우
+  const canManageCategory = (category: Category): boolean => {
+    if (!user) return false;
+    // Admin이면 모든 카테고리 관리 가능
+    if (user.role === 'ADMIN') return true;
+    // 소유자이면 관리 가능
+    return category.ownerId === user.id;
+  };
+
   // 트리를 재귀적으로 렌더링
   const renderCategoryTree = (nodes: CategoryTreeNode[], depth: number = 0): JSX.Element[] => {
-    return nodes.map(node => (
-      <div key={node.id}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '10px 15px',
-            borderBottom: '1px solid #555',
-            paddingLeft: `${15 + depth * 30}px`,
-            background: depth % 2 === 0 ? '#3a3a3a' : '#2b2b2b'
-          }}
-        >
-          <span style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-            {depth > 0 && (
-              <span style={{ color: '#999', marginRight: '8px' }}>
-                {'└' + '─'.repeat(depth)}
-              </span>
+    return nodes.map(node => {
+      const hasManagePermission = canManageCategory(node);
+
+      return (
+        <div key={node.id}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '10px 15px',
+              borderBottom: '1px solid #555',
+              paddingLeft: `${15 + depth * 30}px`,
+              background: depth % 2 === 0 ? '#3a3a3a' : '#2b2b2b'
+            }}
+          >
+            <span style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+              {depth > 0 && (
+                <span style={{ color: '#999', marginRight: '8px' }}>
+                  {'└' + '─'.repeat(depth)}
+                </span>
+              )}
+              <strong style={{ color: depth === 0 ? '#ffffff' : '#cccccc' }}>
+                {node.name}
+              </strong>
+              {node.children.length > 0 && (
+                <span style={{ marginLeft: '8px', color: '#999', fontSize: '12px' }}>
+                  ({node.children.length}개 하위)
+                </span>
+              )}
+              {node.ownerId === user?.id && (
+                <span style={{ marginLeft: '8px', color: '#4CAF50', fontSize: '11px', fontWeight: 'bold' }}>
+                  내 카테고리
+                </span>
+              )}
+            </span>
+            {hasManagePermission && (
+              <div style={{ display: 'flex', gap: '5px' }}>
+                <button
+                  onClick={() => navigate(`/categories/${node.id}/edit`)}
+                  style={{ fontSize: '12px', background: '#0066cc', color: 'white', border: '1px solid #555' }}
+                >
+                  상세 수정
+                </button>
+                <button
+                  onClick={() => handleDeleteCategory(node.id, node.name)}
+                  style={{ fontSize: '12px', background: '#dc3545', color: 'white', border: '1px solid #555' }}
+                >
+                  삭제
+                </button>
+              </div>
             )}
-            <strong style={{ color: depth === 0 ? '#ffffff' : '#cccccc' }}>
-              {node.name}
-            </strong>
-            {node.children.length > 0 && (
-              <span style={{ marginLeft: '8px', color: '#999', fontSize: '12px' }}>
-                ({node.children.length}개 하위)
-              </span>
-            )}
-          </span>
-          <div style={{ display: 'flex', gap: '5px' }}>
-            <button
-              onClick={() => navigate(`/categories/${node.id}/edit`)}
-              style={{ fontSize: '12px', background: '#0066cc', color: 'white', border: '1px solid #555' }}
-            >
-              상세 수정
-            </button>
-            <button
-              onClick={() => handleDeleteCategory(node.id, node.name)}
-              style={{ fontSize: '12px', background: '#dc3545', color: 'white', border: '1px solid #555' }}
-            >
-              삭제
-            </button>
           </div>
+          {node.children.length > 0 && renderCategoryTree(node.children, depth + 1)}
         </div>
-        {node.children.length > 0 && renderCategoryTree(node.children, depth + 1)}
-      </div>
-    ));
+      );
+    });
   };
 
   if (loading) {
@@ -216,7 +248,47 @@ export const CategoryManagePage = () => {
             </div>
           ) : (
             <div>
-              {renderCategoryTree(buildCategoryTree(categories))}
+              {(() => {
+                const tree = buildCategoryTree(categories);
+                const myCategories = tree.filter(node => node.ownerId === user?.id);
+                const otherCategories = tree.filter(node => node.ownerId !== user?.id);
+
+                return (
+                  <>
+                    {myCategories.length > 0 && (
+                      <>
+                        <div style={{
+                          padding: '10px 15px',
+                          background: '#4a4a4a',
+                          borderBottom: '2px solid #4CAF50',
+                          color: '#4CAF50',
+                          fontWeight: 'bold',
+                          fontSize: '14px'
+                        }}>
+                          내 카테고리 ({myCategories.length}개)
+                        </div>
+                        {renderCategoryTree(myCategories)}
+                      </>
+                    )}
+                    {otherCategories.length > 0 && (
+                      <>
+                        <div style={{
+                          padding: '10px 15px',
+                          background: '#4a4a4a',
+                          borderBottom: '1px solid #555',
+                          color: '#999',
+                          fontWeight: 'bold',
+                          fontSize: '14px',
+                          marginTop: myCategories.length > 0 ? '10px' : '0'
+                        }}>
+                          전체 카테고리 ({otherCategories.length}개)
+                        </div>
+                        {renderCategoryTree(otherCategories)}
+                      </>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           )}
         </div>
