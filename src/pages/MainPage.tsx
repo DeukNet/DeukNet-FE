@@ -285,12 +285,7 @@ export const MainPage = () => {
                       className="trending-post-simple-item"
                     >
                       <span className="item-number">{index + 1}.</span>
-                      <span className="item-title">
-                        {item.categoryName}
-                        <span className="category-stats">
-                          (글 {item.postCount})
-                        </span>
-                      </span>
+                      <span className="item-title">{item.categoryName}</span>
                     </div>
                   ))}
                 </div>
