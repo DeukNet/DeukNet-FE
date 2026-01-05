@@ -58,7 +58,7 @@ export const Navbar = () => {
               <Link to="/categories" className="navbar-link">
                 카테고리
               </Link>
-              {user?.role === 'ADMIN' && (
+              {isAuthenticated && (
                 <Link to="/categories/manage" className="navbar-link">
                   카테고리 관리
                 </Link>
