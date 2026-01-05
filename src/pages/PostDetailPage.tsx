@@ -595,23 +595,25 @@ export const PostDetailPage = () => {
         </div>
         {showComments && (
           <div className="box-content">
-            <hr style={{ border: 'none', borderTop: '1px solid #555', margin: '15px 0' }} />
             {!showCommentEditor ? (
-              <div style={{ marginBottom: '15px' }}>
-                <button
-                  onClick={() => setShowCommentEditor(true)}
-                  style={{
-                    padding: '10px 20px',
-                    background: '#0066cc',
-                    color: '#ffffff',
-                    border: '1px solid #0066cc',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  댓글 쓰기
-                </button>
+              <div>
+                <div style={{ marginBottom: '15px' }}>
+                  <button
+                    onClick={() => setShowCommentEditor(true)}
+                    style={{
+                      padding: '10px 20px',
+                      background: '#0066cc',
+                      color: '#ffffff',
+                      border: '1px solid #0066cc',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    댓글 쓰기
+                  </button>
+                </div>
+                <hr style={{ border: 'none', borderTop: '1px solid #555', margin: '15px 0' }} />
               </div>
             ) : (
               <div style={{ marginBottom: '15px' }}>
