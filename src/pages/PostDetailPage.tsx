@@ -39,6 +39,7 @@ export const PostDetailPage = () => {
   const [isAnonymousComment, setIsAnonymousComment] = useState(false);
   const [isAnonymousReply, setIsAnonymousReply] = useState(false);
   const [showComments, setShowComments] = useState(true);
+  const [showCommentEditor, setShowCommentEditor] = useState(false);
   const [relatedPosts, setRelatedPosts] = useState<PostSearchResponse[]>([]);
   const viewAddedRef = useRef(false);
 
@@ -46,6 +47,7 @@ export const PostDetailPage = () => {
     // Reset view flag and show comments state when post ID changes
     viewAddedRef.current = false;
     setShowComments(true);
+    setShowCommentEditor(false);
 
     const fetchPost = async () => {
       if (!id) return;
@@ -334,6 +336,7 @@ export const PostDetailPage = () => {
       trackCreateComment(id, false); // false = top-level comment
       setCommentText('');
       setIsAnonymousComment(false);
+      setShowCommentEditor(false);
 
       // Ensure comments are shown
       setShowComments(true);
@@ -592,26 +595,64 @@ export const PostDetailPage = () => {
         </div>
         {showComments && (
           <div className="box-content">
-            <div style={{ marginBottom: '15px' }}>
-              <MarkdownEditor
-                value={commentText}
-                onChange={setCommentText}
-                placeholder="댓글을 입력하세요... (마크다운 지원)"
-                minHeight="150px"
-              />
-              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#ffffff' }}>
-                  <input
-                    type="checkbox"
-                    checked={isAnonymousComment}
-                    onChange={(e) => setIsAnonymousComment(e.target.checked)}
-                    style={{ marginRight: '5px' }}
-                  />
-                  익명으로 작성
-                </label>
-                <button onClick={handleCommentSubmit}>댓글 작성</button>
+            {!showCommentEditor ? (
+              <div style={{ marginBottom: '15px', textAlign: 'center' }}>
+                <button
+                  onClick={() => setShowCommentEditor(true)}
+                  style={{
+                    padding: '10px 20px',
+                    background: '#0066cc',
+                    color: '#ffffff',
+                    border: '1px solid #0066cc',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  댓글 쓰기
+                </button>
               </div>
-            </div>
+            ) : (
+              <div style={{ marginBottom: '15px' }}>
+                <MarkdownEditor
+                  value={commentText}
+                  onChange={setCommentText}
+                  placeholder="댓글을 입력하세요... (마크다운 지원)"
+                  minHeight="150px"
+                />
+                <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#ffffff' }}>
+                    <input
+                      type="checkbox"
+                      checked={isAnonymousComment}
+                      onChange={(e) => setIsAnonymousComment(e.target.checked)}
+                      style={{ marginRight: '5px' }}
+                    />
+                    익명으로 작성
+                  </label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => {
+                        setShowCommentEditor(false);
+                        setCommentText('');
+                        setIsAnonymousComment(false);
+                      }}
+                      style={{
+                        padding: '8px 15px',
+                        background: '#2a2a2a',
+                        color: '#ffffff',
+                        border: '1px solid #555',
+                        cursor: 'pointer',
+                        fontSize: '14px'
+                      }}
+                    >
+                      취소
+                    </button>
+                    <button onClick={handleCommentSubmit}>댓글 작성</button>
+                  </div>
+                </div>
+              </div>
+            )}
             {comments.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
                 첫 댓글을 작성해보세요!
