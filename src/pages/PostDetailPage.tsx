@@ -595,8 +595,9 @@ export const PostDetailPage = () => {
         </div>
         {showComments && (
           <div className="box-content">
+            <hr style={{ border: 'none', borderTop: '1px solid #555', margin: '15px 0' }} />
             {!showCommentEditor ? (
-              <div style={{ marginBottom: '15px', textAlign: 'center' }}>
+              <div style={{ marginBottom: '15px' }}>
                 <button
                   onClick={() => setShowCommentEditor(true)}
                   style={{
