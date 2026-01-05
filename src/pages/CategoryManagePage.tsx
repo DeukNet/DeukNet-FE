@@ -137,8 +137,6 @@ export const CategoryManagePage = () => {
   // 트리를 재귀적으로 렌더링
   const renderCategoryTree = (nodes: CategoryTreeNode[], depth: number = 0): JSX.Element[] => {
     return nodes.map(node => {
-      const hasManagePermission = canManageCategory(node);
-
       return (
         <div key={node.id}>
           <div
@@ -171,22 +169,20 @@ export const CategoryManagePage = () => {
                 </span>
               )}
             </span>
-            {hasManagePermission && (
-              <div style={{ display: 'flex', gap: '5px' }}>
-                <button
-                  onClick={() => navigate(`/categories/${node.id}/edit`)}
-                  style={{ fontSize: '12px', background: '#0066cc', color: 'white', border: '1px solid #555' }}
-                >
-                  상세 수정
-                </button>
-                <button
-                  onClick={() => handleDeleteCategory(node.id, node.name)}
-                  style={{ fontSize: '12px', background: '#dc3545', color: 'white', border: '1px solid #555' }}
-                >
-                  삭제
-                </button>
-              </div>
-            )}
+            <div style={{ display: 'flex', gap: '5px' }}>
+              <button
+                onClick={() => navigate(`/categories/${node.id}/edit`)}
+                style={{ fontSize: '12px', background: '#0066cc', color: 'white', border: '1px solid #555' }}
+              >
+                상세 수정
+              </button>
+              <button
+                onClick={() => handleDeleteCategory(node.id, node.name)}
+                style={{ fontSize: '12px', background: '#dc3545', color: 'white', border: '1px solid #555' }}
+              >
+                삭제
+              </button>
+            </div>
           </div>
           {node.children.length > 0 && renderCategoryTree(node.children, depth + 1)}
         </div>
