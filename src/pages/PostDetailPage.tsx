@@ -42,12 +42,50 @@ export const PostDetailPage = () => {
   const [showCommentEditor, setShowCommentEditor] = useState(false);
   const [relatedPosts, setRelatedPosts] = useState<PostSearchResponse[]>([]);
   const viewAddedRef = useRef(false);
+  const pendingReactionRef = useRef<{
+    action: 'add' | 'remove';
+    type: 'LIKE' | 'DISLIKE';
+    reactionId?: string;
+  } | null>(null);
+
+  // Handle pending reaction on unmount or page unload
+  useEffect(() => {
+    const flushPendingReaction = async () => {
+      if (!id || !pendingReactionRef.current) return;
+
+      const pending = pendingReactionRef.current;
+      try {
+        if (pending.action === 'add') {
+          await reactionService.addReaction(id, { reactionType: pending.type });
+        } else if (pending.action === 'remove' && pending.reactionId) {
+          await reactionService.removeReaction(id, pending.reactionId);
+        }
+        pendingReactionRef.current = null;
+      } catch (error) {
+        console.error('Failed to flush pending reaction:', error);
+      }
+    };
+
+    // Handle beforeunload (page refresh, close, navigation)
+    const handleBeforeUnload = () => {
+      flushPendingReaction();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      // Flush on component unmount
+      flushPendingReaction();
+    };
+  }, [id]);
 
   useEffect(() => {
     // Reset view flag and show comments state when post ID changes
     viewAddedRef.current = false;
     setShowComments(true);
     setShowCommentEditor(false);
+    pendingReactionRef.current = null;
 
     const fetchPost = async () => {
       if (!id) return;
@@ -155,7 +193,7 @@ export const PostDetailPage = () => {
     };
   }, [id, isAuthenticated]);
 
-  const handleLike = async () => {
+  const handleLike = () => {
     if (!id || !post) return;
 
     if (!isAuthenticated) {
@@ -165,18 +203,28 @@ export const PostDetailPage = () => {
     }
 
     // Optimistic UI update
-    const previousPost = { ...post };
     const updatedPost = { ...post };
 
     if (post.hasUserLiked) {
       // Cancel like
       updatedPost.likeCount = Math.max(0, (post.likeCount || 0) - 1);
       updatedPost.hasUserLiked = false;
+      pendingReactionRef.current = {
+        action: 'remove',
+        type: 'LIKE',
+        reactionId: post.userLikeReactionId || undefined
+      };
       updatedPost.userLikeReactionId = null;
+      trackUnlikePost(id);
     } else {
       // Add like
       updatedPost.likeCount = (post.likeCount || 0) + 1;
       updatedPost.hasUserLiked = true;
+      pendingReactionRef.current = {
+        action: 'add',
+        type: 'LIKE'
+      };
+      trackLikePost(id);
 
       // Remove dislike if exists
       if (post.hasUserDisliked) {
@@ -184,58 +232,33 @@ export const PostDetailPage = () => {
         updatedPost.hasUserDisliked = false;
         updatedPost.userDislikeReactionId = null;
       }
+
+      // 초록색/금색 파티클 효과 - 1번만 터지기
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+      function randomInRange(min: number, max: number) {
+        return Math.random() * (max - min) + min;
+      }
+
+      // 한 번 폭발
+      confetti({
+        ...defaults,
+        particleCount: 150,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
+      });
+      confetti({
+        ...defaults,
+        particleCount: 150,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
+      });
     }
 
     setPost(updatedPost);
-
-    try {
-      if (post.hasUserLiked && post.userLikeReactionId) {
-        // Cancel like
-        await reactionService.removeReaction(id, post.userLikeReactionId);
-        trackUnlikePost(id);
-      } else {
-        // Add like - 파티클 효과 (1번만 터지기)
-        const reactionId = await reactionService.addReaction(id, { reactionType: 'LIKE' });
-        // Update the reaction ID in optimistic state
-        setPost(prev => prev ? { ...prev, userLikeReactionId: reactionId } : null);
-        trackLikePost(id);
-
-        // 초록색/금색 파티클 효과 - 1번만 터지기
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-        function randomInRange(min: number, max: number) {
-          return Math.random() * (max - min) + min;
-        }
-
-        // 한 번 폭발
-        confetti({
-          ...defaults,
-          particleCount: 150,
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-          colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
-        });
-        confetti({
-          ...defaults,
-          particleCount: 150,
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-          colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
-        });
-      }
-    } catch (error: any) {
-      console.error('Failed to handle like:', error);
-      // Rollback on error
-      setPost(previousPost);
-
-      if (error.response?.status === 403) {
-        toast.error('로그인이 필요합니다.');
-        navigate('/login');
-      } else {
-        toast.error('추천에 실패했습니다.');
-      }
-    }
   };
 
-  const handleDislike = async () => {
+  const handleDislike = () => {
     if (!id || !post) return;
 
     if (!isAuthenticated) {
@@ -245,18 +268,28 @@ export const PostDetailPage = () => {
     }
 
     // Optimistic UI update
-    const previousPost = { ...post };
     const updatedPost = { ...post };
 
     if (post.hasUserDisliked) {
       // Cancel dislike
       updatedPost.dislikeCount = Math.max(0, (post.dislikeCount || 0) - 1);
       updatedPost.hasUserDisliked = false;
+      pendingReactionRef.current = {
+        action: 'remove',
+        type: 'DISLIKE',
+        reactionId: post.userDislikeReactionId || undefined
+      };
       updatedPost.userDislikeReactionId = null;
+      trackUndislikePost(id);
     } else {
       // Add dislike
       updatedPost.dislikeCount = (post.dislikeCount || 0) + 1;
       updatedPost.hasUserDisliked = true;
+      pendingReactionRef.current = {
+        action: 'add',
+        type: 'DISLIKE'
+      };
+      trackDislikePost(id);
 
       // Remove like if exists
       if (post.hasUserLiked) {
@@ -267,31 +300,6 @@ export const PostDetailPage = () => {
     }
 
     setPost(updatedPost);
-
-    try {
-      if (post.hasUserDisliked && post.userDislikeReactionId) {
-        // Cancel dislike
-        await reactionService.removeReaction(id, post.userDislikeReactionId);
-        trackUndislikePost(id);
-      } else {
-        // Add dislike - 파티클 효과 없음
-        const reactionId = await reactionService.addReaction(id, { reactionType: 'DISLIKE' });
-        // Update the reaction ID in optimistic state
-        setPost(prev => prev ? { ...prev, userDislikeReactionId: reactionId } : null);
-        trackDislikePost(id);
-      }
-    } catch (error: any) {
-      console.error('Failed to handle dislike:', error);
-      // Rollback on error
-      setPost(previousPost);
-
-      if (error.response?.status === 403) {
-        toast.error('로그인이 필요합니다.');
-        navigate('/login');
-      } else {
-        toast.error('비추천에 실패했습니다.');
-      }
-    }
   };
 
   const handleEdit = () => {
