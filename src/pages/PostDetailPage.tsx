@@ -38,14 +38,14 @@ export const PostDetailPage = () => {
   const [replyText, setReplyText] = useState('');
   const [isAnonymousComment, setIsAnonymousComment] = useState(false);
   const [isAnonymousReply, setIsAnonymousReply] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState(true);
   const [relatedPosts, setRelatedPosts] = useState<PostSearchResponse[]>([]);
   const viewAddedRef = useRef(false);
 
   useEffect(() => {
     // Reset view flag and show comments state when post ID changes
     viewAddedRef.current = false;
-    setShowComments(false);
+    setShowComments(true);
 
     const fetchPost = async () => {
       if (!id) return;
