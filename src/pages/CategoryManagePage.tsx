@@ -11,13 +11,18 @@ interface CategoryTreeNode extends Category {
 
 export const CategoryManagePage = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading: authLoading } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [parentCategoryId, setParentCategoryId] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Auth 로딩 중이면 대기
+    if (authLoading) {
+      return;
+    }
+
     if (!isAuthenticated) {
       toast.error('로그인이 필요합니다.');
       navigate('/login');
@@ -25,7 +30,7 @@ export const CategoryManagePage = () => {
     }
 
     fetchCategories();
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
 
   const fetchCategories = async () => {
     try {
@@ -194,7 +199,7 @@ export const CategoryManagePage = () => {
     });
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <div className="loading">로딩 중...</div>;
   }
 
