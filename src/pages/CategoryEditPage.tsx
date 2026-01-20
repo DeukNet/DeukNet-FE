@@ -27,13 +27,6 @@ export const CategoryEditPage = () => {
         return;
       }
 
-      // 어드민 권한 확인
-      if (user?.role !== 'ADMIN') {
-        toast.error('권한이 없습니다.');
-        navigate(`/categories/${categoryId}`);
-        return;
-      }
-
       try {
         setLoading(true);
         const allCategories = await categoryService.getAllCategories();
@@ -42,6 +35,16 @@ export const CategoryEditPage = () => {
         if (!currentCategory) {
           toast.error('카테고리를 찾을 수 없습니다.');
           navigate('/');
+          return;
+        }
+
+        // 권한 확인: ADMIN이거나 카테고리 소유자만 수정 가능
+        const isAdmin = user?.role === 'ADMIN';
+        const isOwner = currentCategory.ownerId === user?.id;
+
+        if (!isAdmin && !isOwner) {
+          toast.error('권한이 없습니다.');
+          navigate(`/categories/${categoryId}`);
           return;
         }
 
@@ -104,8 +107,8 @@ export const CategoryEditPage = () => {
       setSaving(true);
 
       await categoryService.updateCategory(categoryId, {
-        description: description.trim() || undefined,
-        thumbnailImageUrl: thumbnailImageUrl.trim() || undefined,
+        description: description.trim(),
+        thumbnailImageUrl: thumbnailImageUrl.trim(),
       });
 
       toast.success('카테고리가 수정되었습니다.');

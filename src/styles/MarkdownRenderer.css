@@ -200,3 +200,33 @@ html.dark .markdown-content td {
   margin: 12px 0;
   line-height: 1.7;
 }
+
+/* 유튜브 임베드 */
+.youtube-embed-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 12px auto;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #000;
+}
+
+.youtube-embed-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* 댓글 내 유튜브 임베드 크기 제한 */
+.comment-content .youtube-embed-container {
+  max-width: 100%;
+  margin: 8px 0;
+}
+
+@media (max-width: 768px) {
+  .youtube-embed-container {
+    max-width: 100%;
+    margin: 8px 0;
+  }
+}

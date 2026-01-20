@@ -26,7 +26,6 @@ export const CategoryPage = () => {
   const [inputKeyword, setInputKeyword] = useState(''); // 입력 필드용
   const [searchKeyword, setSearchKeyword] = useState(''); // 실제 검색용
   const [bookmarked, setBookmarked] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
 
   // 이스터 애그 트리거를 위한 상태
   const [accuracyClickCount, setAccuracyClickCount] = useState(0);
@@ -38,16 +37,6 @@ export const CategoryPage = () => {
       setBookmarked(isBookmarked(categoryId));
     }
   }, [categoryId]);
-
-  // Parallax 스크롤 효과
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // 정확도순 버튼 클릭 핸들러 (이스터 애그 트리거)
   const handleAccuracyClick = () => {
@@ -204,6 +193,8 @@ export const CategoryPage = () => {
   };
 
   const isAdmin = user?.role === 'ADMIN';
+  const isOwner = category?.ownerId === user?.id;
+  const canEdit = isAdmin || isOwner;
 
   if (!category) {
     return <div className="loading">카테고리를 찾을 수 없습니다.</div>;
@@ -211,19 +202,11 @@ export const CategoryPage = () => {
 
   return (
     <div className="category-page">
-      {/* 카테고리 썸네일 헤더 */}
+      {/* 카테고리 헤더 */}
       <div
         className="category-header-banner"
         style={{
-          backgroundImage: category.thumbnailImageUrl
-            ? `url(${category.thumbnailImageUrl})`
-            : 'none',
-          backgroundColor: category.thumbnailImageUrl ? 'transparent' : '#3a3a3a',
-          backgroundSize: category.thumbnailImageUrl ? 'auto 100%' : 'auto',
-          backgroundPosition: category.thumbnailImageUrl
-            ? `center ${scrollY * 0.5}px`
-            : 'center',
-          backgroundRepeat: category.thumbnailImageUrl ? 'repeat-x' : 'no-repeat',
+          backgroundColor: '#3a3a3a',
         }}
       >
         <div className="category-header-overlay">
@@ -234,7 +217,7 @@ export const CategoryPage = () => {
             )}
           </div>
           <div className="category-header-actions">
-            {isAdmin && (
+            {canEdit && (
               <button
                 className="edit-button"
                 onClick={() => navigate(`/categories/${categoryId}/edit`)}
@@ -277,12 +260,6 @@ export const CategoryPage = () => {
                 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {child.thumbnailImageUrl && (
-                  <div
-                    className="child-category-thumbnail"
-                    style={{ backgroundImage: `url(${child.thumbnailImageUrl})` }}
-                  />
-                )}
                 <div className="child-category-content">
                   <span className="child-category-name">
                     <span className="child-category-indent">└─</span>

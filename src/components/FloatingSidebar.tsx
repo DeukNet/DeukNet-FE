@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/FloatingSidebar.css';
@@ -7,37 +7,6 @@ export const FloatingSidebar = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [recentCategories, setRecentCategories] = useState<{ categoryId: string; categoryName: string; timestamp: number }[]>([]);
-
-  // 최근 본 카테고리 로드
-  useEffect(() => {
-    try {
-      const STORAGE_KEY = 'categoryViewHistory_v3';
-      const history = localStorage.getItem(STORAGE_KEY);
-
-      if (!history) {
-        setRecentCategories([]);
-        return;
-      }
-
-      const viewHistory: { [key: string]: { name: string; timestamp: number } } = JSON.parse(history);
-
-      const sortedCategories = Object.entries(viewHistory)
-        .filter(([_, data]) => typeof data === 'object' && data.name && typeof data.timestamp === 'number')
-        .map(([catId, data]) => ({
-          categoryId: catId,
-          categoryName: data.name,
-          timestamp: data.timestamp
-        }))
-        .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, 5);
-
-      setRecentCategories(sortedCategories);
-    } catch (error) {
-      console.error('Error loading category view history:', error);
-      setRecentCategories([]);
-    }
-  }, []);
 
   return (
     <>
@@ -100,33 +69,6 @@ export const FloatingSidebar = () => {
                 </Link>
               )}
             </div>
-          </div>
-        </div>
-
-        {/* 최근 본 카테고리 */}
-        <div className="sidebar-section">
-          <div className="sidebar-section-header">최근 본 카테고리</div>
-          <div className="sidebar-section-content">
-            {recentCategories.length === 0 ? (
-              <div className="empty-categories">
-                조회한 카테고리가 없습니다
-              </div>
-            ) : (
-              <div className="frequent-categories-list">
-                {recentCategories.map((category) => (
-                  <div
-                    key={category.categoryId}
-                    className="frequent-category-item"
-                    onClick={() => {
-                      navigate(`/categories/${category.categoryId}`);
-                      setIsOpen(false);
-                    }}
-                  >
-                    <span className="category-name">{category.categoryName}</span>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import { replaceYoutubeLinksWithEmbeds } from '../utils/youtubeUtils';
 import '../styles/MarkdownRenderer.css';
 
 interface MarkdownRendererProps {
@@ -8,6 +9,9 @@ interface MarkdownRendererProps {
 }
 
 export const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
+  // 유튜브 링크를 임베드로 변환
+  const processedContent = replaceYoutubeLinksWithEmbeds(content);
+
   return (
     <div className="markdown-content">
       <ReactMarkdown
@@ -92,7 +96,7 @@ export const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
           },
         }}
       >
-        {content}
+        {processedContent}
       </ReactMarkdown>
     </div>
   );

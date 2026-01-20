@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { categoryService } from '../services/categoryService';
-import { CategoryScroller } from '../components/CategoryScroller';
-import type { Category, CategoryRankingResponse } from '../types/api';
+import type { Category } from '../types/api';
 import { getBookmarks, type CategoryBookmark } from '../utils/categoryBookmarks';
 import '../styles/CategorySelectPage.css';
 
@@ -15,42 +14,34 @@ export const CategorySelectPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [bookmarks, setBookmarks] = useState<CategoryBookmark[]>(() => getBookmarks());
-  const [categoryRanking, setCategoryRanking] = useState<CategoryRankingResponse[]>([]);
-  const [rankingLoading, setRankingLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   // 북마크 업데이트 리스너
   useEffect(() => {
-    const handleStorageChange = () => {
+    const handleBookmarksChange = () => {
       setBookmarks(getBookmarks());
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('bookmarksUpdated' as any, handleStorageChange);
+    window.addEventListener('storage', handleBookmarksChange);
+    window.addEventListener('bookmarksUpdated' as any, handleBookmarksChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('bookmarksUpdated' as any, handleStorageChange);
+      window.removeEventListener('storage', handleBookmarksChange);
+      window.removeEventListener('bookmarksUpdated' as any, handleBookmarksChange);
     };
   }, []);
 
-  // 카테고리 및 랭킹 조회
+  // 카테고리 조회
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        setRankingLoading(true);
-        const [allCategories, ranking] = await Promise.all([
-          categoryService.getAllCategories(),
-          categoryService.getCategoryRanking(10)
-        ]);
+        const allCategories = await categoryService.getAllCategories();
         setCategories(allCategories);
-        setCategoryRanking(ranking);
       } catch (error) {
         console.error('Failed to fetch categories:', error);
       } finally {
         setLoading(false);
-        setRankingLoading(false);
       }
     };
 
@@ -148,11 +139,17 @@ export const CategorySelectPage = () => {
 
   return (
     <div className="category-select-page">
-      <div className="category-select-header">
-        <h1>카테고리 선택</h1>
-      </div>
-
       <div className="category-select-content">
+        {/* 카테고리 선택 헤더 */}
+        <h1 className="page-title">카테고리 선택</h1>
+        <hr className="title-divider" />
+
+        {/* 안내 문구 */}
+        <div className="guide-message">
+          <p>게시글 작성 전 카테고리를 선택합니다.</p>
+          <p>카테고리를 선택하면 해당 카테고리의 독자들에게 더 잘 노출됩니다.</p>
+        </div>
+
         {/* 카테고리 없이 작성 버튼 */}
         <button
           className="no-category-button"
@@ -165,37 +162,23 @@ export const CategorySelectPage = () => {
         {bookmarks.length > 0 && (
           <>
             <h2 className="section-title">카테고리 즐겨찾기</h2>
-            <div className="category-scroller-wrapper">
-              <CategoryScroller
-                categories={bookmarks.map(b => ({
-                  id: b.id,
-                  name: b.name,
-                  thumbnailUrl: b.thumbnailImageUrl
-                }))}
-              />
+            <div className="category-tree-container">
+              {bookmarks.map(bookmark => (
+                <div
+                  key={bookmark.id}
+                  className="category-tree-item"
+                  style={{ background: '#3a3a3a' }}
+                  onClick={() => handleCategorySelect(bookmark.id)}
+                >
+                  <span className="category-tree-name">
+                    <strong style={{ color: '#ffffff' }}>
+                      {bookmark.name}
+                    </strong>
+                  </span>
+                </div>
+              ))}
             </div>
           </>
-        )}
-
-        {/* 인기 카테고리 */}
-        <h2 className="section-title">인기 카테고리</h2>
-        {rankingLoading ? (
-          <div className="loading-message">로딩 중...</div>
-        ) : categoryRanking.length === 0 ? (
-          <div className="empty-message">인기 카테고리가 없습니다</div>
-        ) : (
-          <div className="category-scroller-wrapper">
-            <CategoryScroller
-              categories={categoryRanking.map(ranking => {
-                const categoryDetail = categories.find(c => c.id === ranking.categoryId);
-                return {
-                  id: ranking.categoryId,
-                  name: ranking.categoryName,
-                  thumbnailUrl: categoryDetail?.thumbnailImageUrl
-                };
-              })}
-            />
-          </div>
         )}
 
         {/* 전체 카테고리 보기 */}
@@ -236,11 +219,6 @@ export const CategorySelectPage = () => {
             {renderCategoryTree(categoryTree)}
           </div>
         )}
-
-        {/* 하단 안내 */}
-        <div className="bottom-guide">
-          <p>💡 카테고리를 선택하면 해당 카테고리의 독자들에게 더 잘 노출됩니다.</p>
-        </div>
 
         {/* 취소 버튼 */}
         <div className="cancel-button-wrapper">
