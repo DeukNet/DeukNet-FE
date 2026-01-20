@@ -233,26 +233,28 @@ export const PostDetailPage = () => {
         updatedPost.userDislikeReactionId = null;
       }
 
-      // 초록색/금색 파티클 효과 - 1번만 터지기
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+      // 좋아요 수가 10의 배수일 때만 파티클 효과
+      if (updatedPost.likeCount % 10 === 0) {
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-      function randomInRange(min: number, max: number) {
-        return Math.random() * (max - min) + min;
+        function randomInRange(min: number, max: number) {
+          return Math.random() * (max - min) + min;
+        }
+
+        // 한 번 폭발
+        confetti({
+          ...defaults,
+          particleCount: 150,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+          colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
+        });
+        confetti({
+          ...defaults,
+          particleCount: 150,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+          colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
+        });
       }
-
-      // 한 번 폭발
-      confetti({
-        ...defaults,
-        particleCount: 150,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-        colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
-      });
-      confetti({
-        ...defaults,
-        particleCount: 150,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-        colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107']
-      });
     }
 
     setPost(updatedPost);
