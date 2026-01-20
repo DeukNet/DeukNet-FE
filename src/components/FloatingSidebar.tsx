@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/FloatingSidebar.css';
 
 export const FloatingSidebar = () => {
-  const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 

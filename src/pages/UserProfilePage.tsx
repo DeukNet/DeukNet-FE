@@ -196,6 +196,7 @@ export const UserProfilePage = () => {
             </button>
           )}
         </div>
+        <hr />
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">프로필이 성공적으로 수정되었습니다.</div>}

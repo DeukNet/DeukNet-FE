@@ -236,6 +236,7 @@ export const CategoryPage = () => {
           </div>
         </div>
       </div>
+      <hr />
 
       {/* 하위 카테고리 */}
       {childCategories.length > 0 && (

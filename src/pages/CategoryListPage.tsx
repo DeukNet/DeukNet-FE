@@ -147,6 +147,7 @@ export const CategoryListPage = () => {
     <div className="category-list-page">
       <div className="category-list-header">
         <h1>카테고리</h1>
+        <hr />
       </div>
 
       <div className="category-list-content">

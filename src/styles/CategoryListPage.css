@@ -6,17 +6,21 @@
 }
 
 .category-list-header {
-  text-align: center;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #3a3a3a;
-  border: 1px solid #555;
+  max-width: 1200px;
+  margin: 0 auto 20px;
 }
 
 .category-list-header h1 {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: bold;
   color: #ffffff;
+  margin: 0 0 10px 0;
+  text-align: left;
+}
+
+.category-list-header hr {
+  border: none;
+  border-top: 1px solid #555;
   margin: 0;
 }
 
