@@ -27,7 +27,8 @@ export const PostDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useViewTransitionNavigate();
   const [searchParams] = useSearchParams();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const canAccessAnonymous = user?.canAccessAnonymous ?? false;
   const [post, setPost] = useState<PostSearchResponse | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -634,14 +635,15 @@ export const PostDetailPage = () => {
                   minHeight="150px"
                 />
                 <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#ffffff' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', cursor: canAccessAnonymous ? 'pointer' : 'not-allowed', color: canAccessAnonymous ? '#ffffff' : '#888' }}>
                     <input
                       type="checkbox"
                       checked={isAnonymousComment}
                       onChange={(e) => setIsAnonymousComment(e.target.checked)}
-                      style={{ marginRight: '5px' }}
+                      disabled={!canAccessAnonymous}
+                      style={{ marginRight: '5px', cursor: canAccessAnonymous ? 'pointer' : 'not-allowed' }}
                     />
-                    익명으로 작성
+                    익명으로 작성{!canAccessAnonymous && ' (권한 필요)'}
                   </label>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
@@ -865,14 +867,15 @@ export const PostDetailPage = () => {
               minHeight="150px"
             />
             <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#ffffff' }}>
+              <label style={{ display: 'flex', alignItems: 'center', cursor: canAccessAnonymous ? 'pointer' : 'not-allowed', color: canAccessAnonymous ? '#ffffff' : '#888' }}>
                 <input
                   type="checkbox"
                   checked={isAnonymousReply}
                   onChange={(e) => setIsAnonymousReply(e.target.checked)}
-                  style={{ marginRight: '5px' }}
+                  disabled={!canAccessAnonymous}
+                  style={{ marginRight: '5px', cursor: canAccessAnonymous ? 'pointer' : 'not-allowed' }}
                 />
-                익명으로 작성
+                익명으로 작성{!canAccessAnonymous && ' (권한 필요)'}
               </label>
               <div>
                 <button

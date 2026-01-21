@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { userService } from '../services/userService';
 import { fileService } from '../services/fileService';
 import { postService } from '../services/postService';
+import { permissionService } from '../services/permissionService';
 import { useAuth } from '../contexts/AuthContext';
 import { PostCard } from '../components/PostCard';
 import { MarkdownEditor } from '../components/MarkdownEditor';
@@ -13,7 +15,7 @@ import '../styles/UserProfilePage.css';
 
 export const UserProfilePage = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, refreshUser } = useAuth();
   const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +27,11 @@ export const UserProfilePage = () => {
   const [success, setSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 익명 권한 관련 상태
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const [permissionPassword, setPermissionPassword] = useState('');
+  const [permissionLoading, setPermissionLoading] = useState(false);
 
   // 게시글 목록 상태
   const [posts, setPosts] = useState<PostSearchResponse[]>([]);
@@ -159,6 +166,33 @@ export const UserProfilePage = () => {
     }
   };
 
+  const handlePermissionRequest = async () => {
+    if (!permissionPassword.trim()) {
+      toast.error('비밀번호를 입력해주세요.');
+      return;
+    }
+
+    try {
+      setPermissionLoading(true);
+      await permissionService.requestAnonymousAccess(permissionPassword);
+      toast.success('익명 권한이 부여되었습니다.');
+      setShowPermissionModal(false);
+      setPermissionPassword('');
+      await refreshUser();
+    } catch (err: any) {
+      console.error('Failed to request permission:', err);
+      if (err.response?.status === 401) {
+        toast.error('비밀번호가 일치하지 않습니다.');
+      } else if (err.response?.status === 404) {
+        toast.error('비밀번호가 설정되지 않았습니다. 관리자에게 문의하세요.');
+      } else {
+        toast.error('권한 신청에 실패했습니다.');
+      }
+    } finally {
+      setPermissionLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="user-profile-page">
@@ -190,11 +224,25 @@ export const UserProfilePage = () => {
           <h1 className="profile-title">
             {isMyProfile ? '내 프로필' : '사용자 프로필'}
           </h1>
-          {isMyProfile && !isEditing && (
-            <button onClick={handleEdit} className="edit-button">
-              수정하기
-            </button>
-          )}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {isMyProfile && !isEditing && (
+              <>
+                <button
+                  onClick={() => setShowPermissionModal(true)}
+                  className="edit-button"
+                  style={{
+                    background: currentUser?.canAccessAnonymous ? '#28a745' : '#6c757d',
+                    borderColor: currentUser?.canAccessAnonymous ? '#28a745' : '#6c757d',
+                  }}
+                >
+                  {currentUser?.canAccessAnonymous ? '익명 권한 있음' : '익명 권한 신청'}
+                </button>
+                <button onClick={handleEdit} className="edit-button">
+                  수정하기
+                </button>
+              </>
+            )}
+          </div>
         </div>
         <hr />
 
@@ -357,6 +405,121 @@ export const UserProfilePage = () => {
           </>
         )}
       </div>
+
+      {/* 익명 권한 신청 모달 */}
+      {showPermissionModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+          onClick={() => setShowPermissionModal(false)}
+        >
+          <div
+            style={{
+              background: '#2a2a2a',
+              padding: '30px',
+              borderRadius: '8px',
+              maxWidth: '400px',
+              width: '90%',
+              border: '1px solid #444',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{ margin: '0 0 20px 0', color: '#fff' }}>
+              {currentUser?.canAccessAnonymous ? '익명 권한 상태' : '익명 권한 신청'}
+            </h2>
+            {currentUser?.canAccessAnonymous ? (
+              <div>
+                <p style={{ color: '#28a745', marginBottom: '20px' }}>
+                  익명 작성 권한이 있습니다.
+                </p>
+                <button
+                  onClick={() => setShowPermissionModal(false)}
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    background: '#6c757d',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  닫기
+                </button>
+              </div>
+            ) : (
+              <div>
+                <p style={{ color: '#aaa', marginBottom: '15px', fontSize: '14px' }}>
+                  익명으로 게시글과 댓글을 작성하려면 비밀번호를 입력하세요.
+                </p>
+                <input
+                  type="password"
+                  value={permissionPassword}
+                  onChange={(e) => setPermissionPassword(e.target.value)}
+                  placeholder="비밀번호 입력"
+                  onKeyDown={(e) => e.key === 'Enter' && handlePermissionRequest()}
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    marginBottom: '15px',
+                    border: '1px solid #555',
+                    borderRadius: '4px',
+                    background: '#3a3a3a',
+                    color: '#fff',
+                    boxSizing: 'border-box',
+                  }}
+                  disabled={permissionLoading}
+                />
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={handlePermissionRequest}
+                    disabled={permissionLoading}
+                    style={{
+                      flex: 1,
+                      padding: '10px',
+                      background: '#0066cc',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: permissionLoading ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    {permissionLoading ? '신청 중...' : '신청하기'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowPermissionModal(false);
+                      setPermissionPassword('');
+                    }}
+                    disabled={permissionLoading}
+                    style={{
+                      flex: 1,
+                      padding: '10px',
+                      background: '#6c757d',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    취소
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

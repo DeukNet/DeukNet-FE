@@ -163,12 +163,22 @@ export interface UserResponse {
   bio: string;
   avatarUrl: string;
   role: UserRole;
+  canAccessAnonymous: boolean;
 }
 
 export interface UpdateUserProfileRequest {
   displayName: string;
   bio: string;
   avatarUrl: string;
+}
+
+// Permission Types
+export interface RequestAnonymousAccessRequest {
+  password: string;
+}
+
+export interface AnonymousAccessStatusResponse {
+  hasAnonymousAccess: boolean;
 }
 
 // API Response Types

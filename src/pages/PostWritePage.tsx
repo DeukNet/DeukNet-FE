@@ -3,12 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { postService } from '../services/postService';
 import { fileService } from '../services/fileService';
+import { useAuth } from '../contexts/AuthContext';
 import { MarkdownEditor } from '../components/MarkdownEditor';
 import { trackCreatePost, trackUploadThumbnail } from '../utils/analyticsEvents';
 
 export const PostWritePage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -17,6 +19,8 @@ export const PostWritePage = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  const canAccessAnonymous = user?.canAccessAnonymous ?? false;
 
   // URL에서 category 파라미터 읽기
   useEffect(() => {
@@ -198,18 +202,22 @@ export const PostWritePage = () => {
             />
           </div>
 
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-              <input
-                type="checkbox"
-                checked={isAnonymous}
-                onChange={(e) => setIsAnonymous(e.target.checked)}
-                disabled={loading}
-                style={{ cursor: 'pointer' }}
-              />
-              <span style={{ fontWeight: 'normal', fontSize: '14px' }}>익명으로 작성</span>
-            </label>
-          </div>
+          {canAccessAnonymous && (
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={isAnonymous}
+                  onChange={(e) => setIsAnonymous(e.target.checked)}
+                  disabled={loading}
+                  style={{ cursor: 'pointer' }}
+                />
+                <span style={{ fontWeight: 'normal', fontSize: '14px' }}>
+                  익명으로 작성
+                </span>
+              </label>
+            </div>
+          )}
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <button
