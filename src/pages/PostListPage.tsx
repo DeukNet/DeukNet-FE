@@ -12,7 +12,7 @@ import '../styles/PostListPage.css';
 export const PostListPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [posts, setPosts] = useState<PostSearchResponse[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchedCategories, setSearchedCategories] = useState<Category[]>([]);
@@ -188,6 +188,12 @@ export const PostListPage = () => {
 
   // 게시물 조회
   useEffect(() => {
+    // AuthContext loading 완료 대기 (사용자 권한 정보 로딩)
+    if (authLoading) {
+      console.log('[PostListPage] Auth loading, skipping post fetch...');
+      return;
+    }
+
     const fetchPosts = async () => {
       try {
         setLoading(true);
@@ -219,7 +225,7 @@ export const PostListPage = () => {
     };
 
     fetchPosts();
-  }, [categoryId, keyword, viewMode, currentPage]);
+  }, [categoryId, keyword, viewMode, currentPage, authLoading]);
 
   const getCurrentCategory = (): Category | null => {
     if (!categoryId) return null;

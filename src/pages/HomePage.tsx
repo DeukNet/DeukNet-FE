@@ -10,7 +10,7 @@ import '../styles/HomePage.css';
 export const HomePage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [recentPosts, setRecentPosts] = useState<PostSearchResponse[]>([]);
   const [trendingPosts, setTrendingPosts] = useState<PostSearchResponse[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -162,6 +162,12 @@ export const HomePage = () => {
 
   // 게시물 조회
   useEffect(() => {
+    // AuthContext loading 완료 대기 (사용자 권한 정보 로딩)
+    if (authLoading) {
+      console.log('[HomePage] Auth loading, skipping post fetch...');
+      return;
+    }
+
     const filtersChanged =
       prevFiltersRef.current.categoryId !== categoryId ||
       prevFiltersRef.current.keyword !== keyword ||
@@ -210,7 +216,7 @@ export const HomePage = () => {
     };
 
     fetchPosts();
-  }, [categoryId, keyword, viewMode, currentPage]);
+  }, [categoryId, keyword, viewMode, currentPage, authLoading]);
 
   const getCurrentCategory = (): Category | null => {
     if (!categoryId) return null;

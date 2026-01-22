@@ -3,11 +3,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { postService } from '../services/postService';
 import { categoryService } from '../services/categoryService';
 import { PostCard } from '../components/PostCard';
+import { useAuth } from '../contexts/AuthContext';
 import type { PostSearchResponse, CategoryRankingResponse } from '../types/api';
 import '../styles/MainPage.css';
 
 export const MainPage = () => {
   const navigate = useNavigate();
+  const { loading: authLoading } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [trendingPosts, setTrendingPosts] = useState<PostSearchResponse[]>([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
@@ -80,6 +82,12 @@ export const MainPage = () => {
 
   // 전체 게시물 조회
   useEffect(() => {
+    // AuthContext loading 완료 대기 (사용자 권한 정보 로딩)
+    if (authLoading) {
+      console.log('[MainPage] Auth loading, skipping post fetch...');
+      return;
+    }
+
     const fetchAllPosts = async () => {
       try {
         setAllPostsLoading(true);
@@ -105,7 +113,7 @@ export const MainPage = () => {
     };
 
     fetchAllPosts();
-  }, [currentPage, viewMode]);
+  }, [currentPage, viewMode, authLoading]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < totalPages) {

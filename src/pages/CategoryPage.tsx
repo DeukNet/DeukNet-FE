@@ -16,7 +16,7 @@ export const CategoryPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useViewTransitionNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading: authLoading } = useAuth();
   const [category, setCategory] = useState<Category | null>(null);
   const [childCategories, setChildCategories] = useState<Category[]>([]);
   const [posts, setPosts] = useState<PostSearchResponse[]>([]);
@@ -146,6 +146,12 @@ export const CategoryPage = () => {
 
   // 게시물 조회
   useEffect(() => {
+    // AuthContext loading 완료 대기 (사용자 권한 정보 로딩)
+    if (authLoading) {
+      console.log('[CategoryPage] Auth loading, skipping post fetch...');
+      return;
+    }
+
     const fetchPosts = async () => {
       if (!categoryId) return;
 
@@ -175,7 +181,7 @@ export const CategoryPage = () => {
     };
 
     fetchPosts();
-  }, [categoryId, viewMode, currentPage, searchKeyword]);
+  }, [categoryId, viewMode, currentPage, searchKeyword, authLoading]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < totalPages) {
