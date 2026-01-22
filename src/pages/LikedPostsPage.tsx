@@ -8,7 +8,7 @@ import '../styles/PostListPage.css';
 
 export const LikedPostsPage = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [posts, setPosts] = useState<PostSearchResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,6 +26,12 @@ export const LikedPostsPage = () => {
   // 게시물 조회
   useEffect(() => {
     if (!isAuthenticated) return;
+
+    // AuthContext loading 완료 대기 (사용자 권한 정보 로딩)
+    if (authLoading) {
+      console.log('[LikedPostsPage] Auth loading, skipping posts fetch...');
+      return;
+    }
 
     const fetchPosts = async () => {
       try {
@@ -51,7 +57,7 @@ export const LikedPostsPage = () => {
     };
 
     fetchPosts();
-  }, [currentPage, isAuthenticated, navigate]);
+  }, [currentPage, isAuthenticated, navigate, authLoading]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < totalPages) {

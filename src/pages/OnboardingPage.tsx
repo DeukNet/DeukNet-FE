@@ -85,53 +85,48 @@ export const OnboardingPage = () => {
             DeukNet에 오신 것을 환영합니다!
           </div>
           <div style={{ padding: '30px 20px' }}>
-            <div style={{ marginBottom: '30px' }}>
-              <h3 style={{ color: '#ffffff', fontSize: '18px', marginBottom: '15px', fontWeight: 'bold' }}>
-                익명 권한 기능을 소개합니다
-              </h3>
-              <p style={{ color: '#e0e0e0', lineHeight: '1.8', marginBottom: '20px' }}>
-                DeukNet은 <strong>익명으로 게시글과 댓글을 작성</strong>할 수 있는 특별한 기능을 제공합니다.
+            <div style={{ marginBottom: '25px', textAlign: 'center' }}>
+              <p style={{ color: '#e0e0e0', fontSize: '16px', lineHeight: '1.6', marginBottom: '10px' }}>
+                DeukNet은 <strong style={{ color: '#66b3ff', fontSize: '18px' }}>익명 작성 기능</strong>을 제공합니다
               </p>
             </div>
 
-            <div style={{ background: '#2b2b2b', border: '1px solid #555', borderRadius: '4px', padding: '20px', marginBottom: '30px' }}>
-              <h4 style={{ color: '#66b3ff', fontSize: '16px', marginBottom: '15px', fontWeight: 'bold' }}>
-                익명 권한이란?
+            <div style={{ background: '#2b2b2b', border: '2px solid #66b3ff', borderRadius: '8px', padding: '20px', marginBottom: '25px' }}>
+              <h4 style={{
+                color: '#66b3ff',
+                fontSize: '17px',
+                marginBottom: '15px',
+                fontWeight: 'bold',
+                borderBottom: '2px solid #66b3ff',
+                paddingBottom: '8px'
+              }}>
+                💡 익명 권한이란?
               </h4>
-              <ul style={{ color: '#e0e0e0', lineHeight: '1.8', paddingLeft: '20px' }}>
-                <li style={{ marginBottom: '10px' }}>
-                  게시글/댓글 작성 시 <strong>실명 또는 익명</strong> 중 선택할 수 있습니다.
-                </li>
-                <li style={{ marginBottom: '10px' }}>
-                  익명으로 작성된 글은 작성자 정보가 <strong>"익명"</strong>으로 표시됩니다.
-                </li>
-                <li style={{ marginBottom: '10px' }}>
-                  익명 권한을 사용하려면 <strong>관리자가 제공하는 비밀번호</strong>가 필요합니다.
-                </li>
-              </ul>
+              <p style={{ color: '#e0e0e0', lineHeight: '1.7', fontSize: '14px', marginBottom: '12px' }}>
+                • 게시글/댓글 작성 시 <strong style={{ textDecoration: 'underline' }}>실명 또는 익명</strong> 선택 가능<br/>
+                • 익명 작성 시 작성자 정보가 <strong>"익명"</strong>으로 표시
+              </p>
             </div>
 
-            <div style={{ background: '#2b2b2b', border: '1px solid #555', borderRadius: '4px', padding: '20px', marginBottom: '30px' }}>
-              <h4 style={{ color: '#66b3ff', fontSize: '16px', marginBottom: '15px', fontWeight: 'bold' }}>
-                익명 권한 받는 방법
+            <div style={{ background: '#2b2b2b', border: '2px solid #555', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
+              <h4 style={{
+                color: '#ffffff',
+                fontSize: '17px',
+                marginBottom: '12px',
+                fontWeight: 'bold',
+                borderBottom: '2px solid #555',
+                paddingBottom: '8px'
+              }}>
+                🔑 권한 신청 방법
               </h4>
-              <ol style={{ color: '#e0e0e0', lineHeight: '1.8', paddingLeft: '20px' }}>
-                <li style={{ marginBottom: '10px' }}>
-                  아래 <strong>"익명 권한 신청하기"</strong> 버튼을 클릭합니다.
-                </li>
-                <li style={{ marginBottom: '10px' }}>
-                  관리자에게 받은 <strong>비밀번호</strong>를 입력합니다.
-                </li>
-                <li style={{ marginBottom: '10px' }}>
-                  권한 승인 후, 게시글/댓글 작성 시 익명 선택이 가능합니다.
-                </li>
-              </ol>
+              <p style={{ color: '#e0e0e0', lineHeight: '1.7', fontSize: '14px' }}>
+                <strong style={{ color: '#66b3ff' }}>1.</strong> 아래 버튼 클릭 → <strong style={{ color: '#66b3ff' }}>2.</strong> 비밀번호 입력 → <strong style={{ color: '#66b3ff' }}>3.</strong> 승인 완료
+              </p>
             </div>
 
-            <div style={{ background: '#3a2b2b', border: '1px solid #664444', borderRadius: '4px', padding: '15px', marginBottom: '30px' }}>
-              <p style={{ color: '#ffcccc', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-                <strong>주의사항:</strong><br />
-                익명 권한은 악용될 수 있으므로, 신중하게 사용해주세요. 부적절한 게시물은 관리자가 삭제할 수 있으며, 권한이 회수될 수 있습니다.
+            <div style={{ background: '#3a2b2b', border: '1px solid #cc6666', borderRadius: '6px', padding: '12px', marginBottom: '25px' }}>
+              <p style={{ color: '#ffcccc', fontSize: '12px', lineHeight: '1.5', margin: 0 }}>
+                ⚠️ <strong>악용 시 권한이 회수될 수 있습니다</strong>
               </p>
             </div>
 

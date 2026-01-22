@@ -15,7 +15,7 @@ import '../styles/UserProfilePage.css';
 
 export const UserProfilePage = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { user: currentUser, refreshUser } = useAuth();
+  const { user: currentUser, refreshUser, loading: authLoading } = useAuth();
   const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +67,12 @@ export const UserProfilePage = () => {
 
   // 유저의 게시글 목록 조회
   useEffect(() => {
+    // AuthContext loading 완료 대기 (사용자 권한 정보 로딩)
+    if (authLoading) {
+      console.log('[UserProfilePage] Auth loading, skipping posts fetch...');
+      return;
+    }
+
     const fetchPosts = async () => {
       if (!userId) return;
 
@@ -94,7 +100,7 @@ export const UserProfilePage = () => {
     };
 
     fetchPosts();
-  }, [userId, currentPage, isMyProfile]);
+  }, [userId, currentPage, isMyProfile, authLoading]);
 
   const handleEdit = () => {
     if (!user) return;

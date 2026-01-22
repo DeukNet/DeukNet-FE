@@ -114,6 +114,12 @@ export const HomePage = () => {
 
   // 실시간 인기 게시글 조회
   useEffect(() => {
+    // AuthContext loading 완료 대기 (사용자 권한 정보 로딩)
+    if (authLoading) {
+      console.log('[HomePage] Auth loading, skipping trending posts fetch...');
+      return;
+    }
+
     const fetchTrendingPosts = async () => {
       try {
         setTrendingLoading(true);
@@ -127,7 +133,7 @@ export const HomePage = () => {
     };
 
     fetchTrendingPosts();
-  }, []);
+  }, [authLoading]);
 
   // 카테고리 랭킹 조회
   useEffect(() => {
