@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { postService } from '../services/postService';
 import { categoryService } from '../services/categoryService';
 import { PostCard } from '../components/PostCard';
@@ -8,18 +8,29 @@ import '../styles/MainPage.css';
 
 export const MainPage = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [trendingPosts, setTrendingPosts] = useState<PostSearchResponse[]>([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
   const [showAllTrending, setShowAllTrending] = useState(false);
   const [allPosts, setAllPosts] = useState<PostSearchResponse[]>([]);
   const [allPostsLoading, setAllPostsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0);
+
+  // URL에서 페이지 번호 읽기 (없으면 0)
+  const pageFromUrl = parseInt(searchParams.get('page') || '0', 10);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
+
   const [totalPages, setTotalPages] = useState(0);
   const [viewMode, setViewMode] = useState<'recent' | 'popular' | 'featured'>('recent');
   const [categoryRanking, setCategoryRanking] = useState<CategoryRankingResponse[]>([]);
   const [rankingLoading, setRankingLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
+
+  // URL 쿼리 파라미터 변경 시 currentPage 동기화
+  useEffect(() => {
+    const page = parseInt(searchParams.get('page') || '0', 10);
+    setCurrentPage(page);
+  }, [searchParams]);
 
   // 화면 크기 감지
   useEffect(() => {
@@ -98,7 +109,7 @@ export const MainPage = () => {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
+      setSearchParams({ page: newPage.toString() });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -116,7 +127,7 @@ export const MainPage = () => {
             <button
               onClick={() => {
                 setViewMode('recent');
-                setCurrentPage(0);
+                setSearchParams({ page: '0' });
               }}
               className={`tab-button ${viewMode === 'recent' ? 'active' : ''}`}
             >
@@ -125,7 +136,7 @@ export const MainPage = () => {
             <button
               onClick={() => {
                 setViewMode('popular');
-                setCurrentPage(0);
+                setSearchParams({ page: '0' });
               }}
               className={`tab-button ${viewMode === 'popular' ? 'active' : ''}`}
             >
@@ -134,7 +145,7 @@ export const MainPage = () => {
             <button
               onClick={() => {
                 setViewMode('featured');
-                setCurrentPage(0);
+                setSearchParams({ page: '0' });
               }}
               className={`tab-button featured ${viewMode === 'featured' ? 'active' : ''}`}
             >
@@ -281,7 +292,7 @@ export const MainPage = () => {
                   ).map((item, index) => (
                     <div
                       key={item.categoryId}
-                      onClick={() => navigate(`/?category=${item.categoryId}`)}
+                      onClick={() => navigate(`/categories/${item.categoryId}`)}
                       className="trending-post-simple-item"
                     >
                       <span className="item-number">{index + 1}.</span>

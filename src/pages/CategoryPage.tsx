@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { categoryService } from '../services/categoryService';
 import { postService } from '../services/postService';
@@ -14,6 +14,7 @@ import '../styles/CategoryPage.css';
 
 export const CategoryPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useViewTransitionNavigate();
   const { isAuthenticated, user } = useAuth();
   const [category, setCategory] = useState<Category | null>(null);
@@ -21,11 +22,21 @@ export const CategoryPage = () => {
   const [posts, setPosts] = useState<PostSearchResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'recent' | 'popular' | 'featured'>('recent');
-  const [currentPage, setCurrentPage] = useState(0);
+
+  // URL에서 페이지 번호 읽기 (없으면 0)
+  const pageFromUrl = parseInt(searchParams.get('page') || '0', 10);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
+
   const [totalPages, setTotalPages] = useState(0);
   const [inputKeyword, setInputKeyword] = useState(''); // 입력 필드용
   const [searchKeyword, setSearchKeyword] = useState(''); // 실제 검색용
   const [bookmarked, setBookmarked] = useState(false);
+
+  // URL 쿼리 파라미터 변경 시 currentPage 동기화
+  useEffect(() => {
+    const page = parseInt(searchParams.get('page') || '0', 10);
+    setCurrentPage(page);
+  }, [searchParams]);
 
   // 이스터 애그 트리거를 위한 상태
   const [accuracyClickCount, setAccuracyClickCount] = useState(0);
@@ -168,7 +179,7 @@ export const CategoryPage = () => {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
+      setSearchParams({ page: newPage.toString() });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -176,13 +187,13 @@ export const CategoryPage = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setSearchKeyword(inputKeyword);
-    setCurrentPage(0);
+    setSearchParams({ page: '0' });
   };
 
   const handleSearchClear = () => {
     setInputKeyword('');
     setSearchKeyword('');
-    setCurrentPage(0);
+    setSearchParams({ page: '0' });
   };
 
   const handleBookmarkToggle = () => {
@@ -313,14 +324,20 @@ export const CategoryPage = () => {
             {searchKeyword ? '정확도순' : '최신순'}
           </button>
           <button
-            onClick={() => setViewMode('popular')}
+            onClick={() => {
+              setViewMode('popular');
+              setSearchParams({ page: '0' });
+            }}
             className={`tab-button ${viewMode === 'popular' ? 'active' : ''}`}
           >
             인기순
           </button>
           {!searchKeyword && (
             <button
-              onClick={() => setViewMode('featured')}
+              onClick={() => {
+                setViewMode('featured');
+                setSearchParams({ page: '0' });
+              }}
               className={`tab-button featured ${viewMode === 'featured' ? 'active' : ''}`}
             >
               추천

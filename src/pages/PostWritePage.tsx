@@ -92,8 +92,7 @@ export const PostWritePage = () => {
       await postService.publishPost(postId);
       trackCreatePost(selectedCategoryId);
 
-      // forceCommandModel=true로 PostgreSQL에서 직접 조회하여 최신 데이터 보장
-      navigate(`/posts/${postId}?forceCommandModel=true`);
+      navigate(`/posts/${postId}`);
     } catch (error: any) {
       console.error('Failed to create post:', error);
       toast.error(error.response?.data?.message || '게시글 작성에 실패했습니다.');

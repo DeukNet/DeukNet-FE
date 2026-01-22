@@ -103,8 +103,7 @@ export const PostEditPage = () => {
       trackUpdatePost(id);
 
       toast.success('게시글이 수정되었습니다.');
-      // forceCommandModel=true로 PostgreSQL에서 직접 조회하여 최신 데이터 보장
-      navigate(`/posts/${id}?forceCommandModel=true`);
+      navigate(`/posts/${id}`);
     } catch (error: any) {
       console.error('Failed to update post:', error);
       toast.error(error.response?.data?.message || '게시글 수정에 실패했습니다.');

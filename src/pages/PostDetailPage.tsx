@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import confetti from 'canvas-confetti';
 import { postService } from '../services/postService';
@@ -26,7 +26,6 @@ import {
 export const PostDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useViewTransitionNavigate();
-  const [searchParams] = useSearchParams();
   const { isAuthenticated, user } = useAuth();
   const canAccessAnonymous = user?.canAccessAnonymous ?? false;
   const [post, setPost] = useState<PostSearchResponse | null>(null);
@@ -94,11 +93,8 @@ export const PostDetailPage = () => {
       try {
         setLoading(true);
 
-        // Check if forceCommandModel query parameter is present (생성/수정 직후)
-        const forceCommandModel = searchParams.get('forceCommandModel') === 'true';
-
         // Fetch only post data
-        const postData = await postService.getPostById(id, forceCommandModel);
+        const postData = await postService.getPostById(id);
 
         setPost(postData);
 
@@ -529,7 +525,14 @@ export const PostDetailPage = () => {
       </header>
 
       <div className="box">
-        <div className="box-header">{post.title}</div>
+        <div className="box-header">
+          {post.title}
+          {post.categoryName && (
+            <span style={{ marginLeft: '12px', fontSize: '18px', color: '#888', fontWeight: 'normal' }}>
+              [{post.categoryName}]
+            </span>
+          )}
+        </div>
         <div style={{ padding: '10px 15px', borderBottom: '1px solid #555', background: '#3a3a3a' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', color: '#999' }}>
             <div>
@@ -635,16 +638,18 @@ export const PostDetailPage = () => {
                   minHeight="150px"
                 />
                 <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', cursor: canAccessAnonymous ? 'pointer' : 'not-allowed', color: canAccessAnonymous ? '#ffffff' : '#888' }}>
-                    <input
-                      type="checkbox"
-                      checked={isAnonymousComment}
-                      onChange={(e) => setIsAnonymousComment(e.target.checked)}
-                      disabled={!canAccessAnonymous}
-                      style={{ marginRight: '5px', cursor: canAccessAnonymous ? 'pointer' : 'not-allowed' }}
-                    />
-                    익명으로 작성{!canAccessAnonymous && ' (권한 필요)'}
-                  </label>
+                  {canAccessAnonymous && (
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#ffffff' }}>
+                      <input
+                        type="checkbox"
+                        checked={isAnonymousComment}
+                        onChange={(e) => setIsAnonymousComment(e.target.checked)}
+                        style={{ marginRight: '5px', cursor: 'pointer' }}
+                      />
+                      익명으로 작성
+                    </label>
+                  )}
+                  {!canAccessAnonymous && <div />}
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       onClick={() => {
@@ -867,16 +872,18 @@ export const PostDetailPage = () => {
               minHeight="150px"
             />
             <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', cursor: canAccessAnonymous ? 'pointer' : 'not-allowed', color: canAccessAnonymous ? '#ffffff' : '#888' }}>
-                <input
-                  type="checkbox"
-                  checked={isAnonymousReply}
-                  onChange={(e) => setIsAnonymousReply(e.target.checked)}
-                  disabled={!canAccessAnonymous}
-                  style={{ marginRight: '5px', cursor: canAccessAnonymous ? 'pointer' : 'not-allowed' }}
-                />
-                익명으로 작성{!canAccessAnonymous && ' (권한 필요)'}
-              </label>
+              {canAccessAnonymous && (
+                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#ffffff' }}>
+                  <input
+                    type="checkbox"
+                    checked={isAnonymousReply}
+                    onChange={(e) => setIsAnonymousReply(e.target.checked)}
+                    style={{ marginRight: '5px', cursor: 'pointer' }}
+                  />
+                  익명으로 작성
+                </label>
+              )}
+              {!canAccessAnonymous && <div />}
               <div>
                 <button
                   onClick={() => handleReplySubmit(comment.id)}

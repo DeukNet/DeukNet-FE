@@ -30,10 +30,8 @@ export const postService = {
   },
 
   // Get post by ID
-  getPostById: async (postId: string, forceCommandModel = false): Promise<PostSearchResponse> => {
-    const response = await apiClient.get<PostSearchResponse>(`/api/posts/${postId}`, {
-      params: { forceCommandModel },
-    });
+  getPostById: async (postId: string): Promise<PostSearchResponse> => {
+    const response = await apiClient.get<PostSearchResponse>(`/api/posts/${postId}`);
     return response.data;
   },
 
