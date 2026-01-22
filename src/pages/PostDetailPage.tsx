@@ -491,10 +491,17 @@ export const PostDetailPage = () => {
               <Link to="/" style={{ color: '#66b3ff' }}>홈</Link>
               <span> &gt; </span>
               <span>게시판</span>
-              {post.categoryName && (
+              {post.categoryName && post.categoryId && (
                 <>
                   <span> &gt; </span>
-                  <span>{post.categoryName}</span>
+                  <Link
+                    to={`/categories/${post.categoryId}`}
+                    style={{ color: '#66b3ff', textDecoration: 'none' }}
+                    onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                    onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
+                  >
+                    {post.categoryName}
+                  </Link>
                 </>
               )}
             </div>
@@ -519,7 +526,7 @@ export const PostDetailPage = () => {
             onMouseEnter={(e) => e.currentTarget.style.background = '#3a3a3a'}
             onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
           >
-            {post.categoryId ? '카테고리 전체 보기' : '메인으로'}
+            {post.categoryId ? `${post.categoryName} 더보기` : '메인으로'}
           </button>
         </div>
       </header>
@@ -527,10 +534,27 @@ export const PostDetailPage = () => {
       <div className="box">
         <div className="box-header">
           {post.title}
-          {post.categoryName && (
-            <span style={{ marginLeft: '12px', fontSize: '18px', color: '#888', fontWeight: 'normal' }}>
+          {post.categoryName && post.categoryId && (
+            <Link
+              to={`/categories/${post.categoryId}`}
+              style={{
+                marginLeft: '12px',
+                fontSize: '18px',
+                color: '#888',
+                fontWeight: 'normal',
+                textDecoration: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#66b3ff';
+                e.currentTarget.style.textDecoration = 'underline';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#888';
+                e.currentTarget.style.textDecoration = 'none';
+              }}
+            >
               [{post.categoryName}]
-            </span>
+            </Link>
           )}
         </div>
         <div style={{ padding: '10px 15px', borderBottom: '1px solid #555', background: '#3a3a3a' }}>

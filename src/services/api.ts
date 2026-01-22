@@ -76,11 +76,12 @@ class ApiClient {
         const originalRequest = error.config;
 
         // 현재 사용자 조회 API에서 403/401 발생 시에만 로그아웃
-        const isCurrentUserEndpoint = originalRequest.url?.includes('/api/users/me');
+        // /api/users/me 정확히 일치하는 경우만 (complete-onboarding 등 제외)
+        const isCurrentUserGetEndpoint = originalRequest.url === '/api/users/me' && originalRequest.method?.toLowerCase() === 'get';
 
         // 403 에러 처리
         if (error.response?.status === 403) {
-          if (isCurrentUserEndpoint) {
+          if (isCurrentUserGetEndpoint) {
             console.error('[API] 403 Forbidden on current user endpoint - Logging out');
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');

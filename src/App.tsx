@@ -15,6 +15,7 @@ import { PostEditPage } from './pages/PostEditPage';
 import { SearchPage } from './pages/SearchPage';
 import { LoginPage } from './pages/LoginPage';
 import { OAuthSuccessPage } from './pages/OAuthSuccessPage';
+import { OnboardingPage } from './pages/OnboardingPage';
 import { CategoryManagePage } from './pages/CategoryManagePage';
 import { UserProfilePage } from './pages/UserProfilePage';
 import { TermsOfServicePage } from './pages/TermsOfServicePage';
@@ -71,6 +72,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/terms" element={<TermsOfServicePage />} />
           <Route path="/auth/success" element={<OAuthSuccessPage />} />
+          <Route path="/onboarding" element={<OnboardingPage />} />
           <Route
             path="/"
             element={

@@ -91,6 +91,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsAuthenticated(false);
     setUser(null);
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('hasSeenOnboarding');
     trackLogout();
   };
 
